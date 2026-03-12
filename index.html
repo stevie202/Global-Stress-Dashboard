@@ -22,8 +22,8 @@
 
   /* ── HEADER ── */
   .header { text-align: center; margin-bottom: 8px; }
-  .label    { font-size: 10px; letter-spacing: 0.3em;  color: #444; margin-bottom: 4px; }
-  .subtitle { font-size: 12px; letter-spacing: 0.15em; color: #666; }
+  .label    { font-size: 13px; letter-spacing: 0.3em;  color: #888; margin-bottom: 4px; }
+  .subtitle { font-size: 15px; letter-spacing: 0.15em; color: #aaa; }
 
   /* ── GLOBAL COMPOSITE CARD ── */
   .global-card {
@@ -48,25 +48,25 @@
     justify-content: space-between; flex-wrap: wrap; gap: 16px;
     margin-bottom: 24px;
   }
-  .global-score-label { font-size: 9px; letter-spacing: 0.2em; color: #444; margin-bottom: 6px; }
+  .global-score-label { font-size: 12px; letter-spacing: 0.2em; color: #888; margin-bottom: 6px; }
   .global-score {
     font-size: 72px; font-weight: 700;
     letter-spacing: -0.02em; line-height: 1;
     transition: color 0.4s;
   }
-  .global-score-sub { font-size: 9px; letter-spacing: 0.12em; color: #444; margin-top: 8px; }
+  .global-score-sub { font-size: 11px; letter-spacing: 0.12em; color: #777; margin-top: 8px; }
   .global-right { text-align: right; }
   .global-badge {
-    display: inline-block; font-size: 11px; font-weight: 600;
+    display: inline-block; font-size: 13px; font-weight: 600;
     letter-spacing: 0.2em; text-transform: uppercase;
     padding: 7px 14px; border: 1px solid currentColor;
     margin-bottom: 8px;
   }
-  .global-desc { font-size: 10px; letter-spacing: 0.06em; color: #666; max-width: 280px; text-align: right; line-height: 1.6; }
-  .global-meter-label { font-size: 9px; letter-spacing: 0.15em; color: #444; margin-bottom: 8px; }
+  .global-desc { font-size: 12px; letter-spacing: 0.06em; color: #999; max-width: 280px; text-align: right; line-height: 1.6; }
+  .global-meter-label { font-size: 11px; letter-spacing: 0.15em; color: #888; margin-bottom: 8px; }
   .meter-track { height: 4px; background: #1e1e1e; width: 100%; margin-bottom: 6px; }
   .meter-fill  { height: 100%; width: 0%; transition: width 1.2s ease, background 0.4s; }
-  .meter-zones { display: flex; justify-content: space-between; font-size: 8px; color: #333; letter-spacing: 0.04em; }
+  .meter-zones { display: flex; justify-content: space-between; font-size: 10px; color: #666; letter-spacing: 0.04em; }
 
   /* ── GRID ── */
   .cards-grid {
@@ -92,34 +92,43 @@
     display: flex; justify-content: space-between;
     align-items: flex-start; margin-bottom: 14px;
   }
-  .card-ticker { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; color: #e8e8e8; }
-  .card-region { font-size: 9px; letter-spacing: 0.1em; color: #555; margin-top: 3px; text-transform: uppercase; }
+  .card-ticker {
+    font-size: 15px; font-weight: 700; letter-spacing: 0.12em; color: #e8e8e8;
+  }
+  a.card-ticker {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.15s;
+  }
+  a.card-ticker:hover { color: #00ff88; }
+
+  .card-region { font-size: 11px; letter-spacing: 0.1em; color: #888; margin-top: 3px; text-transform: uppercase; }
 
   .badge {
-    display: inline-block; font-size: 9px; font-weight: 600;
+    display: inline-block; font-size: 11px; font-weight: 600;
     letter-spacing: 0.18em; text-transform: uppercase;
     padding: 4px 9px; border: 1px solid currentColor;
     transition: color 0.4s, border-color 0.4s;
   }
 
   .price  { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin-bottom: 8px; transition: color 0.4s; }
-  .change { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 16px; min-height: 16px; }
+  .change { font-size: 13px; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 16px; min-height: 16px; }
   .up     { color: #ff4466; }
   .down   { color: #00ff88; }
   .neutral{ color: #666; }
 
-  .meter-label    { font-size: 8px; letter-spacing: 0.15em; color: #444; margin-bottom: 7px; }
+  .meter-label    { font-size: 10px; letter-spacing: 0.15em; color: #888; margin-bottom: 7px; }
   .meter-zones-sm {
     display: flex; justify-content: space-between;
-    font-size: 7px; color: #333; letter-spacing: 0.03em; margin-bottom: 16px;
+    font-size: 9px; color: #666; letter-spacing: 0.03em; margin-bottom: 16px;
   }
 
   .divider { height: 1px; background: #1e1e1e; margin-bottom: 14px; }
-  .meta-row { display: flex; justify-content: space-between; font-size: 9px; color: #444; letter-spacing: 0.08em; margin-bottom: 7px; }
-  .meta-val { color: #666; }
+  .meta-row { display: flex; justify-content: space-between; font-size: 11px; color: #888; letter-spacing: 0.08em; margin-bottom: 7px; }
+  .meta-val { color: #bbb; }
 
   .card-desc {
-    font-size: 9px; color: #555; letter-spacing: 0.04em;
+    font-size: 11px; color: #888; letter-spacing: 0.04em;
     line-height: 1.65; margin-top: auto;
     padding-top: 14px; border-top: 1px solid #1a1a1a;
   }
@@ -131,16 +140,16 @@
     border: 1px solid #1a1a1a; padding: 16px 20px;
     display: flex; flex-direction: column; justify-content: center;
   }
-  .guide-title { font-size: 9px; letter-spacing: 0.2em; color: #333; margin-bottom: 10px; }
+  .guide-title { font-size: 11px; letter-spacing: 0.2em; color: #777; margin-bottom: 10px; }
   .guide-row {
     display: flex; justify-content: space-between;
-    font-size: 9px; letter-spacing: 0.06em;
+    font-size: 11px; letter-spacing: 0.06em;
     padding: 5px 0; border-bottom: 1px solid #141414;
   }
   .guide-row:last-child { border-bottom: none; }
-  .gr    { color: #3a3a3a; }
+  .gr    { color: #666; }
   .calm  { color: #00ff88; font-weight: 600; }
-  .neut  { color: #666;    font-weight: 600; }
+  .neut  { color: #aaa;    font-weight: 600; }
   .caut  { color: #ffcc00; font-weight: 600; }
   .fear  { color: #ff8800; font-weight: 600; }
   .xfear { color: #ff4466; font-weight: 600; }
@@ -150,20 +159,20 @@
     width: 100%; max-width: 780px;
     display: flex; justify-content: space-between; align-items: center;
   }
-  .live { display: flex; align-items: center; gap: 6px; font-size: 8px; color: #333; letter-spacing: 0.1em; }
+  .live { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #777; letter-spacing: 0.1em; }
   .dot  { width: 5px; height: 5px; background: #00ff88; border-radius: 50%; animation: pulse 2s infinite; }
   @keyframes pulse {
     0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(0,255,136,0.5); }
     50%      { opacity:0.5; box-shadow: 0 0 0 4px rgba(0,255,136,0); }
   }
   .refresh-btn {
-    background: none; border: 1px solid #222; color: #444;
-    font-family: 'IBM Plex Mono', monospace; font-size: 8px;
+    background: none; border: 1px solid #333; color: #777;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
     letter-spacing: 0.15em; padding: 5px 10px; cursor: pointer; transition: all 0.15s;
   }
   .refresh-btn:hover   { border-color: #00ff88; color: #00ff88; }
   .refresh-btn:disabled { opacity: 0.3; cursor: default; }
-  .updated { font-size: 8px; color: #2a2a2a; letter-spacing: 0.08em; margin-top: 6px; }
+  .updated { font-size: 10px; color: #555; letter-spacing: 0.08em; margin-top: 6px; }
 
   /* ── LOADERS ── */
   .loading-mask {
@@ -176,7 +185,7 @@
     border-radius: 50%; animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .error-note { font-size: 8px; color: #ff4466; letter-spacing: 0.1em; text-align: center; padding: 8px; }
+  .error-note { font-size: 10px; color: #ff4466; letter-spacing: 0.1em; text-align: center; padding: 8px; }
   .spinning   { animation: spin 1s linear infinite; display: inline-block; }
 </style>
 </head>
@@ -231,7 +240,7 @@
     <div class="loading-mask" id="loader-vix"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <div class="card-ticker">VIX</div>
+        <a class="card-ticker" href="https://finance.yahoo.com/quote/%5EVIX/" target="_blank">VIX</a>
         <div class="card-region">US Equity · S&amp;P 500</div>
       </div>
       <div class="badge neutral" id="badge-vix">—</div>
@@ -253,7 +262,7 @@
     <div class="loading-mask" id="loader-move"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <div class="card-ticker">MOVE</div>
+        <a class="card-ticker" href="https://finance.yahoo.com/quote/%5EMOVE/" target="_blank">MOVE</a>
         <div class="card-region">US Bonds · Treasury</div>
       </div>
       <div class="badge neutral" id="badge-move">—</div>
@@ -275,7 +284,7 @@
     <div class="loading-mask" id="loader-vstoxx"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <div class="card-ticker">VSTOXX</div>
+        <a class="card-ticker" href="https://finance.yahoo.com/quote/V2TX.DE/" target="_blank">VSTOXX</a>
         <div class="card-region">Europe · Euro Stoxx 50</div>
       </div>
       <div class="badge neutral" id="badge-vstoxx">—</div>
@@ -302,7 +311,7 @@
 <div class="updated" id="updated"></div>
 
 <script>
-// ── THRESHOLDS — exact match to VIX widget ─────────────────────────────────
+// ── THRESHOLDS ─────────────────────────────────────────────────────────────
 function levelFromScore(v) {
   if      (v < 15) return { name:'CALM',     color:'#00ff88' };
   else if (v < 20) return { name:'NEUTRAL',  color:'#666'    };
@@ -311,8 +320,6 @@ function levelFromScore(v) {
   else             return { name:'REACT',    color:'#ff4466' };
 }
 
-// Normalise MOVE onto VIX scale for composite and badge colouring
-// MOVE ~75 = CALM, ~100 = NEUTRAL, ~125 = CAUTIOUS, ~175 = CONCERN, ~200+ = REACT
 function normaliseMove(m) { return m / 5; }
 
 function f2(n) { return n != null ? parseFloat(n).toFixed(2) : '—'; }
@@ -332,28 +339,23 @@ function renderCard(id, data, maxBar) {
   const isUp = change >= 0;
   const dp   = id === 'move' ? 1 : 2;
 
-  // Price
   const priceEl = document.getElementById(`price-${id}`);
   priceEl.textContent = dp === 1 ? f1(price) : f2(price);
   priceEl.className   = `price ${isUp ? 'up' : 'down'}`;
 
-  // Change
   const chgEl = document.getElementById(`change-${id}`);
   chgEl.textContent = `${isUp ? '▲' : '▼'} ${Math.abs(change).toFixed(dp)}  (${Math.abs(changePct).toFixed(2)}%)`;
   chgEl.className   = `change ${isUp ? 'up' : 'down'}`;
 
-  // Meter
   const meterEl = document.getElementById(`meter-${id}`);
   meterEl.style.width      = Math.min((price / maxBar) * 100, 100) + '%';
   meterEl.style.background = lvl.color;
 
-  // Badge
   const badgeEl = document.getElementById(`badge-${id}`);
   badgeEl.textContent       = lvl.name;
   badgeEl.style.color       = lvl.color;
   badgeEl.style.borderColor = lvl.color;
 
-  // Meta
   document.getElementById(`low-${id}`).textContent  = low  != null ? low.toFixed(dp)  : '—';
   document.getElementById(`high-${id}`).textContent = high != null ? high.toFixed(dp) : '—';
   const prevEl = document.getElementById(`prev-${id}`);
@@ -407,8 +409,8 @@ async function fetchQuote(symbol) {
 }
 
 const SOURCES = [
-  { id:'vix',    symbol:'^VIX',  maxBar:60  },
-  { id:'move',   symbol:'^MOVE', maxBar:250 },
+  { id:'vix',    symbol:'^VIX',    maxBar:60  },
+  { id:'move',   symbol:'^MOVE',   maxBar:250 },
   { id:'vstoxx', symbol:'V2TX.DE', maxBar:60  },
 ];
 
