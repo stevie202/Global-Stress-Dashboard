@@ -1,1 +1,1 @@
-./vendor/activfinancial-1.11.2-py3-none-any.whl
+activfinancial @ ./vendor/activfinancial-1.11.2-py3-none-any.whl
