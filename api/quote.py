@@ -60,25 +60,15 @@ class handler(BaseHTTPRequestHandler):
             session = common.connect_session()
             msg     = session.snapshot(activ_symbol)
 
-            fields    = msg.fields
-            price     = _field_float(fields, FID_TRADE)
-            prev      = _field_float(fields, FID_CLOSE)
-            low       = _field_float(fields, FID_LOW)
-            high      = _field_float(fields, FID_HIGH)
-            change    = (price - prev)          if (price is not None and prev is not None) else None
-            changePct = (change / prev) * 100   if (change is not None and prev)            else None
+            fields = msg.fields
+            metadata = session.metadata
+            debug = {
+                metadata.get_field_name(msg.data_source_id, fid): str(field)
+                for fid, field in fields.items()
+            }
+            print(f'[quote] fields for {activ_symbol}: {debug}')
 
-            self._json(200, {
-                'symbol':      symbol,
-                'price':       price,
-                'prevClose':   prev,
-                'change':      change,
-                'changePct':   changePct,
-                'low':         low,
-                'high':        high,
-                'marketState': 'REGULAR',
-                'timestamp':   str(msg.timestamp) if msg.timestamp else None,
-            })
+            self._json(200, {'symbol': symbol, 'debug_fields': debug})
 
         except Exception as e:
             import traceback
