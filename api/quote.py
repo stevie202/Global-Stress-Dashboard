@@ -81,6 +81,9 @@ class handler(BaseHTTPRequestHandler):
             })
 
         except Exception as e:
+            import traceback
+            print(f'[quote] ERROR for {activ_symbol}: {e}')
+            traceback.print_exc()
             self._json(500, {'error': 'Internal proxy error', 'detail': str(e)})
 
         finally:
