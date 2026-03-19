@@ -7,8 +7,8 @@ dependencies = ["activfinancial"]
 [tool.uv.sources]
 activfinancial = { path = "vendor/activfinancial-1.11.2-py3-none-any.whl" }
 
-[tool.setuptools]
-packages = []
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [build-system]
 requires = ["setuptools"]
