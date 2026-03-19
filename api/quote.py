@@ -6,6 +6,7 @@
 
 import json
 import os
+import re
 import sys
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
@@ -24,17 +25,12 @@ SYMBOL_MAP = {
     'V2TX.DE': '=V2TX.XE',
 }
 
-def _field_float(fields, fid):
-    """Return float value of a field or None if absent / undefined."""
-    field = fields.get(fid)
-    if field is None:
+def _parse_float(value):
+    """Parse a float from an Activ field string, stripping trend indicators like '<-- >'."""
+    if value is None or value == 'None':
         return None
-    if isinstance(field, Field) and not field.is_defined():
-        return None
-    try:
-        return float(str(field))
-    except (ValueError, TypeError):
-        return None
+    m = re.match(r'[-+]?\d*\.?\d+', str(value).strip())
+    return float(m.group()) if m else None
 
 
 class handler(BaseHTTPRequestHandler):
@@ -60,15 +56,29 @@ class handler(BaseHTTPRequestHandler):
             session = common.connect_session()
             msg     = session.snapshot(activ_symbol)
 
-            fields = msg.fields
-            metadata = session.metadata
-            debug = {
-                metadata.get_field_name(msg.data_source_id, fid): str(field)
-                for fid, field in fields.items()
+            f = {
+                session.metadata.get_field_name(msg.data_source_id, fid): str(field)
+                for fid, field in msg.fields.items()
             }
-            print(f'[quote] fields for {activ_symbol}: {debug}')
 
-            self._json(200, {'symbol': symbol, 'debug_fields': debug})
+            price     = _parse_float(f.get('Trade'))
+            prev      = _parse_float(f.get('PreviousClose'))
+            high      = _parse_float(f.get('TradeHigh'))
+            low       = _parse_float(f.get('TradeLow'))
+            change    = _parse_float(f.get('NetChange'))
+            changePct = _parse_float(f.get('PercentChange'))
+
+            self._json(200, {
+                'symbol':      symbol,
+                'price':       price,
+                'prevClose':   prev,
+                'change':      change,
+                'changePct':   changePct,
+                'low':         low,
+                'high':        high,
+                'marketState': 'REGULAR',
+                'timestamp':   f.get('TradeDate'),
+            })
 
         except Exception as e:
             import traceback
