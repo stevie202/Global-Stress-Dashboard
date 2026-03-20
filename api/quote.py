@@ -67,6 +67,7 @@ class handler(BaseHTTPRequestHandler):
             low       = _parse_float(f.get('TradeLow'))
             change    = _parse_float(f.get('NetChange'))
             changePct = _parse_float(f.get('PercentChange'))
+            print(f'[quote] {activ_symbol} → price={price} prev={prev} change={change} changePct={changePct}')
 
             self._json(200, {
                 'symbol':      symbol,
