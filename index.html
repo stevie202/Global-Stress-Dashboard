@@ -187,6 +187,47 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .error-note { font-size: 10px; color: #f43f5e; letter-spacing: 0.1em; text-align: center; padding: 8px; }
   .spinning   { animation: spin 1s linear infinite; display: inline-block; }
+
+  /* ── WEIGHT PANEL ── */
+  .weight-panel {
+    width: 100%; max-width: 780px;
+    background: #131929; border: 1px solid #1e2d45;
+    padding: 16px 22px;
+  }
+  .weight-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .weight-title { font-size: 11px; letter-spacing: 0.2em; color: #6b7a99; }
+  .weight-reset {
+    background: none; border: 1px solid #1e2d45; color: #6b7a99;
+    font-family: 'IBM Plex Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; padding: 3px 8px; cursor: pointer; transition: all 0.15s;
+  }
+  .weight-reset:hover { border-color: #22c55e; color: #22c55e; }
+  .weight-row {
+    display: grid; grid-template-columns: 52px 1fr 38px;
+    align-items: center; gap: 12px; margin-bottom: 10px;
+  }
+  .weight-row:last-child { margin-bottom: 0; }
+  .weight-label { font-size: 11px; letter-spacing: 0.1em; color: #94a3b8; }
+  .weight-pct   { font-size: 11px; letter-spacing: 0.05em; color: #22c55e; text-align: right; }
+  input[type=range].weight-slider {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 3px;
+    background: #1e2d45; outline: none; border-radius: 2px; cursor: pointer;
+  }
+  input[type=range].weight-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 13px; height: 13px; border-radius: 50%;
+    background: #22c55e; cursor: pointer;
+    box-shadow: 0 0 4px rgba(34,197,94,0.4);
+  }
+  input[type=range].weight-slider::-moz-range-thumb {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: #22c55e; cursor: pointer; border: none;
+    box-shadow: 0 0 4px rgba(34,197,94,0.4);
+  }
 </style>
 </head>
 <body>
@@ -206,7 +247,7 @@
       <div>
         <div class="global-score-label">COMPOSITE STRESS SCORE</div>
         <div class="global-score neutral" id="global-score">--</div>
-        <div class="global-score-sub">VIX 50% · MOVE 30% · VSTOXX 20%</div>
+        <div class="global-score-sub" id="global-score-sub">VIX 50% · MOVE 30% · VSTOXX 20%</div>
       </div>
       <div class="global-right">
         <div class="global-badge neutral" id="global-badge">—</div>
@@ -230,6 +271,29 @@
     <div class="guide-row"><span class="gr">&gt;= 35</span><span class="xfear">REACT — Review and act</span></div>
   </div>
 
+</div>
+
+<!-- WEIGHT CONTROLS -->
+<div class="weight-panel">
+  <div class="weight-header">
+    <span class="weight-title">COMPOSITE WEIGHTS</span>
+    <button class="weight-reset" onclick="resetWeights()">RESET</button>
+  </div>
+  <div class="weight-row">
+    <span class="weight-label">VIX</span>
+    <input type="range" id="w-vix" min="0" max="100" value="50" class="weight-slider" oninput="updateWeights()">
+    <span class="weight-pct" id="wp-vix">50%</span>
+  </div>
+  <div class="weight-row">
+    <span class="weight-label">MOVE</span>
+    <input type="range" id="w-move" min="0" max="100" value="30" class="weight-slider" oninput="updateWeights()">
+    <span class="weight-pct" id="wp-move">30%</span>
+  </div>
+  <div class="weight-row">
+    <span class="weight-label">VSTOXX</span>
+    <input type="range" id="w-vstoxx" min="0" max="100" value="20" class="weight-slider" oninput="updateWeights()">
+    <span class="weight-pct" id="wp-vstoxx">20%</span>
+  </div>
 </div>
 
 <!-- INDEX CARDS -->
@@ -313,11 +377,41 @@
 <script>
 // ── THRESHOLDS ─────────────────────────────────────────────────────────────
 function levelFromScore(v) {
-  if      (v < 15) return { name:'CALM',     color:'#00ff88' };
-  else if (v < 20) return { name:'NEUTRAL',  color:'#666'    };
-  else if (v < 25) return { name:'CAUTIOUS', color:'#ffcc00' };
-  else if (v < 35) return { name:'CONCERN',  color:'#ff8800' };
-  else             return { name:'REACT',    color:'#ff4466' };
+  if      (v < 15) return { name:'CALM',     color:'#22c55e' };
+  else if (v < 20) return { name:'NEUTRAL',  color:'#94a3b8' };
+  else if (v < 25) return { name:'CAUTIOUS', color:'#f59e0b' };
+  else if (v < 35) return { name:'CONCERN',  color:'#f97316' };
+  else             return { name:'REACT',    color:'#f43f5e' };
+}
+
+// ── WEIGHTS ─────────────────────────────────────────────────────────────────
+const DEFAULTS = { vix: 50, move: 30, vstoxx: 20 };
+
+function getWeights() {
+  const vix    = parseInt(document.getElementById('w-vix').value);
+  const move   = parseInt(document.getElementById('w-move').value);
+  const vstoxx = parseInt(document.getElementById('w-vstoxx').value);
+  const total  = vix + move + vstoxx || 1;
+  return { vix: vix / total, move: move / total, vstoxx: vstoxx / total };
+}
+
+function updateWeights() {
+  const w = getWeights();
+  const pct = k => Math.round(w[k] * 100) + '%';
+  document.getElementById('wp-vix').textContent    = pct('vix');
+  document.getElementById('wp-move').textContent   = pct('move');
+  document.getElementById('wp-vstoxx').textContent = pct('vstoxx');
+  document.getElementById('global-score-sub').textContent =
+    `VIX ${pct('vix')} · MOVE ${pct('move')} · VSTOXX ${pct('vstoxx')}`;
+  if (cache.vix && cache.move && cache.vstoxx)
+    renderGlobal(cache.vix.price, cache.move.price, cache.vstoxx.price);
+}
+
+function resetWeights() {
+  document.getElementById('w-vix').value    = DEFAULTS.vix;
+  document.getElementById('w-move').value   = DEFAULTS.move;
+  document.getElementById('w-vstoxx').value = DEFAULTS.vstoxx;
+  updateWeights();
 }
 
 function normaliseMove(m) { return m / 5; }
@@ -369,7 +463,8 @@ function renderCard(id, data, maxBar) {
 
 // ── GLOBAL COMPOSITE ───────────────────────────────────────────────────────
 function renderGlobal(vix, move, vstoxx) {
-  const composite = (vix * 0.5) + (normaliseMove(move) * 0.3) + (vstoxx * 0.2);
+  const w = getWeights();
+  const composite = (vix * w.vix) + (normaliseMove(move) * w.move) + (vstoxx * w.vstoxx);
   const lvl = levelFromScore(composite);
 
   const scoreEl = document.getElementById('global-score');
