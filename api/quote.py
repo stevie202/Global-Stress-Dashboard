@@ -61,13 +61,15 @@ class handler(BaseHTTPRequestHandler):
                 for fid, field in msg.fields.items()
             }
 
-            price     = _parse_float(f.get('Trade'))
+            price     = _parse_float(f.get('Trade')) or _parse_float(f.get('Close'))
             prev      = _parse_float(f.get('PreviousClose'))
             high      = _parse_float(f.get('TradeHigh'))
             low       = _parse_float(f.get('TradeLow'))
             change    = _parse_float(f.get('NetChange'))
             changePct = _parse_float(f.get('PercentChange'))
-            print(f'[quote] {activ_symbol} → price={price} prev={prev} change={change} changePct={changePct}')
+            if change is None and price is not None and prev is not None:
+                change    = price - prev
+                changePct = (change / prev) * 100 if prev else None
 
             self._json(200, {
                 'symbol':      symbol,
