@@ -44,25 +44,22 @@
     .top-row { grid-template-columns: 1fr; }
   }
   .global-top {
-    display: flex; align-items: flex-start;
-    justify-content: space-between; flex-wrap: wrap; gap: 16px;
-    margin-bottom: 24px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
   }
-  .global-score-label { font-size: 12px; letter-spacing: 0.2em; color: #8892a4; margin-bottom: 6px; }
+  .global-score-label { font-size: 11px; letter-spacing: 0.2em; color: #8892a4; }
   .global-score {
     font-size: 72px; font-weight: 700;
     letter-spacing: -0.02em; line-height: 1;
-    transition: color 0.4s;
+    transition: color 0.4s; margin-bottom: 8px;
   }
-  .global-score-sub { font-size: 11px; letter-spacing: 0.12em; color: #6b7a99; margin-top: 8px; }
-  .global-right { text-align: right; }
   .global-badge {
     display: inline-block; font-size: 13px; font-weight: 600;
     letter-spacing: 0.2em; text-transform: uppercase;
     padding: 7px 14px; border: 1px solid currentColor;
-    margin-bottom: 8px;
   }
-  .global-desc { font-size: 12px; letter-spacing: 0.06em; color: #8892a4; max-width: 280px; text-align: right; line-height: 1.6; }
+  .global-desc { font-size: 12px; letter-spacing: 0.06em; color: #8892a4; line-height: 1.6; margin-bottom: 20px; }
   .global-meter-label { font-size: 11px; letter-spacing: 0.15em; color: #8892a4; margin-bottom: 8px; }
   .meter-track { height: 4px; background: #172035; width: 100%; margin-bottom: 6px; }
   .meter-fill  { height: 100%; width: 0%; transition: width 1.2s ease, background 0.4s; }
@@ -133,26 +130,26 @@
     padding-top: 14px; border-top: 1px solid #172035;
   }
 
-  /* ── GUIDE ── */
+  /* ── GUIDE (full-width horizontal strip) ── */
   .guide {
-    width: 100%;
-    background: #131929;
-    border: 1px solid #1e2d45; padding: 16px 20px;
-    display: flex; flex-direction: column; justify-content: center;
+    width: 100%; max-width: 780px;
+    background: #131929; border: 1px solid #1e2d45; padding: 14px 20px;
   }
-  .guide-title { font-size: 11px; letter-spacing: 0.2em; color: #6b7a99; margin-bottom: 10px; }
-  .guide-row {
-    display: flex; justify-content: space-between;
-    font-size: 11px; letter-spacing: 0.06em;
-    padding: 5px 0; border-bottom: 1px solid #172035;
+  .guide-title { font-size: 11px; letter-spacing: 0.2em; color: #6b7a99; margin-bottom: 12px; }
+  .guide-items { display: flex; }
+  .guide-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 4px 6px; border-right: 1px solid #172035; text-align: center;
   }
-  .guide-row:last-child { border-bottom: none; }
+  .guide-item:last-child { border-right: none; }
+  .guide-range { font-size: 10px; color: #4a5568; letter-spacing: 0.03em; }
+  .guide-sub   { font-size: 9px;  color: #4a5568; letter-spacing: 0.03em; }
   .gr    { color: #4a5568; }
-  .calm  { color: #22c55e; font-weight: 600; }
-  .neut  { color: #94a3b8; font-weight: 600; }
-  .caut  { color: #f59e0b; font-weight: 600; }
-  .fear  { color: #f97316; font-weight: 600; }
-  .xfear { color: #f43f5e; font-weight: 600; }
+  .calm  { color: #22c55e; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .neut  { color: #94a3b8; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .caut  { color: #f59e0b; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .fear  { color: #f97316; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .xfear { color: #f43f5e; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
 
   /* ── FOOTER ── */
   .footer-row {
@@ -190,9 +187,8 @@
 
   /* ── WEIGHT PANEL ── */
   .weight-panel {
-    width: 100%; max-width: 780px;
     background: #131929; border: 1px solid #1e2d45;
-    padding: 16px 22px;
+    padding: 16px 22px; display: flex; flex-direction: column; justify-content: center;
   }
   .weight-header {
     display: flex; justify-content: space-between; align-items: center;
@@ -238,22 +234,17 @@
   <div class="subtitle">Global Stress Dashboard</div>
 </div>
 
-<!-- TOP ROW: COMPOSITE + GUIDE -->
+<!-- TOP ROW: COMPOSITE + WEIGHTS -->
 <div class="top-row">
 
   <!-- GLOBAL COMPOSITE -->
   <div class="global-card">
     <div class="global-top">
-      <div>
-        <div class="global-score-label">COMPOSITE STRESS SCORE</div>
-        <div class="global-score neutral" id="global-score">--</div>
-        <div class="global-score-sub" id="global-score-sub">VIX 50% · MOVE 30% · VSTOXX 20%</div>
-      </div>
-      <div class="global-right">
-        <div class="global-badge neutral" id="global-badge">—</div>
-        <div class="global-desc" id="global-desc">Fetching live data…</div>
-      </div>
+      <div class="global-score-label">COMPOSITE STRESS SCORE</div>
+      <div class="global-badge neutral" id="global-badge">—</div>
     </div>
+    <div class="global-score neutral" id="global-score">--</div>
+    <div class="global-desc" id="global-desc">Fetching live data…</div>
     <div class="global-meter-label">GLOBAL FEAR LEVEL</div>
     <div class="meter-track"><div class="meter-fill" id="global-meter"></div></div>
     <div class="meter-zones">
@@ -261,38 +252,40 @@
     </div>
   </div>
 
-  <!-- GUIDE -->
-  <div class="guide">
-    <div class="guide-title">READING THE SCORE  ·  VIX fear scale</div>
-    <div class="guide-row"><span class="gr">&lt; 15</span><span class="calm">CALM — Low volatility</span></div>
-    <div class="guide-row"><span class="gr">15 – 19</span><span class="neut">NEUTRAL — Normal market</span></div>
-    <div class="guide-row"><span class="gr">20 – 24</span><span class="caut">CAUTIOUS — Watch closely</span></div>
-    <div class="guide-row"><span class="gr">25 – 34</span><span class="fear">CONCERN — Risk building</span></div>
-    <div class="guide-row"><span class="gr">&gt;= 35</span><span class="xfear">REACT — Review and act</span></div>
+  <!-- COMPOSITE WEIGHTS -->
+  <div class="weight-panel">
+    <div class="weight-header">
+      <span class="weight-title">COMPOSITE WEIGHTS</span>
+      <button class="weight-reset" onclick="resetWeights()">RESET</button>
+    </div>
+    <div class="weight-row">
+      <span class="weight-label">VIX</span>
+      <input type="range" id="w-vix" min="0" max="100" value="50" class="weight-slider" oninput="updateWeights()">
+      <span class="weight-pct" id="wp-vix">50%</span>
+    </div>
+    <div class="weight-row">
+      <span class="weight-label">MOVE</span>
+      <input type="range" id="w-move" min="0" max="100" value="30" class="weight-slider" oninput="updateWeights()">
+      <span class="weight-pct" id="wp-move">30%</span>
+    </div>
+    <div class="weight-row">
+      <span class="weight-label">VSTOXX</span>
+      <input type="range" id="w-vstoxx" min="0" max="100" value="20" class="weight-slider" oninput="updateWeights()">
+      <span class="weight-pct" id="wp-vstoxx">20%</span>
+    </div>
   </div>
 
 </div>
 
-<!-- WEIGHT CONTROLS -->
-<div class="weight-panel">
-  <div class="weight-header">
-    <span class="weight-title">COMPOSITE WEIGHTS</span>
-    <button class="weight-reset" onclick="resetWeights()">RESET</button>
-  </div>
-  <div class="weight-row">
-    <span class="weight-label">VIX</span>
-    <input type="range" id="w-vix" min="0" max="100" value="50" class="weight-slider" oninput="updateWeights()">
-    <span class="weight-pct" id="wp-vix">50%</span>
-  </div>
-  <div class="weight-row">
-    <span class="weight-label">MOVE</span>
-    <input type="range" id="w-move" min="0" max="100" value="30" class="weight-slider" oninput="updateWeights()">
-    <span class="weight-pct" id="wp-move">30%</span>
-  </div>
-  <div class="weight-row">
-    <span class="weight-label">VSTOXX</span>
-    <input type="range" id="w-vstoxx" min="0" max="100" value="20" class="weight-slider" oninput="updateWeights()">
-    <span class="weight-pct" id="wp-vstoxx">20%</span>
+<!-- READING THE SCORE -->
+<div class="guide">
+  <div class="guide-title">READING THE SCORE  ·  VIX fear scale</div>
+  <div class="guide-items">
+    <div class="guide-item"><span class="guide-range">&lt; 15</span><span class="calm">CALM</span><span class="guide-sub">Low volatility</span></div>
+    <div class="guide-item"><span class="guide-range">15 – 19</span><span class="neut">NEUTRAL</span><span class="guide-sub">Normal market</span></div>
+    <div class="guide-item"><span class="guide-range">20 – 24</span><span class="caut">CAUTIOUS</span><span class="guide-sub">Watch closely</span></div>
+    <div class="guide-item"><span class="guide-range">25 – 34</span><span class="fear">CONCERN</span><span class="guide-sub">Risk building</span></div>
+    <div class="guide-item"><span class="guide-range">&gt;= 35</span><span class="xfear">REACT</span><span class="guide-sub">Review and act</span></div>
   </div>
 </div>
 
@@ -304,7 +297,7 @@
     <div class="loading-mask" id="loader-vix"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <a class="card-ticker" href="https://finance.yahoo.com/quote/%5EVIX/" target="_blank">VIX</a>
+        <a class="card-ticker" href="https://www.investing.com/indices/volatility-s-p-500" target="_blank">VIX</a>
         <div class="card-region">US Equity · S&amp;P 500</div>
       </div>
       <div class="badge neutral" id="badge-vix">—</div>
@@ -326,7 +319,7 @@
     <div class="loading-mask" id="loader-move"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <a class="card-ticker" href="https://finance.yahoo.com/quote/%5EMOVE/" target="_blank">MOVE</a>
+        <a class="card-ticker" href="https://www.investing.com/indices/ice-bofaml-move" target="_blank">MOVE</a>
         <div class="card-region">US Bonds · Treasury</div>
       </div>
       <div class="badge neutral" id="badge-move">—</div>
@@ -348,7 +341,7 @@
     <div class="loading-mask" id="loader-vstoxx"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <a class="card-ticker" href="https://finance.yahoo.com/quote/V2TX.DE/" target="_blank">VSTOXX</a>
+        <a class="card-ticker" href="https://uk.investing.com/indices/stoxx-50-volatility-vstoxx-eur" target="_blank">VSTOXX</a>
         <div class="card-region">Europe · Euro Stoxx 50</div>
       </div>
       <div class="badge neutral" id="badge-vstoxx">—</div>
@@ -401,8 +394,6 @@ function updateWeights() {
   document.getElementById('wp-vix').textContent    = pct('vix');
   document.getElementById('wp-move').textContent   = pct('move');
   document.getElementById('wp-vstoxx').textContent = pct('vstoxx');
-  document.getElementById('global-score-sub').textContent =
-    `VIX ${pct('vix')} · MOVE ${pct('move')} · VSTOXX ${pct('vstoxx')}`;
   if (cache.vix && cache.move && cache.vstoxx)
     renderGlobal(cache.vix.price, cache.move.price, cache.vstoxx.price);
 }
