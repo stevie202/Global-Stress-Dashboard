@@ -129,7 +129,8 @@
   .neutral{ color: #4a5568; }
 
   .meter-label { font-size: 10px; letter-spacing: 0.15em; color: #8892a4; margin-bottom: 7px; }
-  .meter-track-sm { margin-bottom: 16px; }
+  .meter-track-sm { margin-bottom: 4px; }
+  .meter-zones-sm { position: relative; height: 14px; margin-bottom: 12px; }
 
   .divider { height: 1px; background: #172035; margin-bottom: 14px; }
   .meta-row { display: flex; justify-content: space-between; font-size: 11px; color: #8892a4; letter-spacing: 0.08em; margin-bottom: 7px; }
@@ -322,6 +323,12 @@
     <div class="change neutral" id="change-vix"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
     <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-vix"></div></div>
+    <div class="meter-zones-sm">
+      <span class="mz" style="left:0%">CALM</span>
+      <span class="mz" style="left:25%">15</span>
+      <span class="mz" style="left:33.3%">20</span>
+      <span class="mz" style="left:58.3%">35+</span>
+    </div>
     <div class="divider"></div>
     <div class="meta-row"><span>DAY LOW</span><span class="meta-val" id="low-vix">—</span></div>
     <div class="meta-row"><span>DAY HIGH</span><span class="meta-val" id="high-vix">—</span></div>
@@ -343,6 +350,12 @@
     <div class="change neutral" id="change-move"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
     <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-move"></div></div>
+    <div class="meter-zones-sm">
+      <span class="mz" style="left:0%">CALM</span>
+      <span class="mz" style="left:25%">75</span>
+      <span class="mz" style="left:33.3%">100</span>
+      <span class="mz" style="left:58.3%">175+</span>
+    </div>
     <div class="divider"></div>
     <div class="meta-row"><span>DAY LOW</span><span class="meta-val" id="low-move">—</span></div>
     <div class="meta-row"><span>DAY HIGH</span><span class="meta-val" id="high-move">—</span></div>
@@ -364,6 +377,12 @@
     <div class="change neutral" id="change-vstoxx"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
     <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-vstoxx"></div></div>
+    <div class="meter-zones-sm">
+      <span class="mz" style="left:0%">CALM</span>
+      <span class="mz" style="left:25%">15</span>
+      <span class="mz" style="left:33.3%">20</span>
+      <span class="mz" style="left:58.3%">35+</span>
+    </div>
     <div class="divider"></div>
     <div class="meta-row"><span>DAY LOW</span><span class="meta-val" id="low-vstoxx">—</span></div>
     <div class="meta-row"><span>DAY HIGH</span><span class="meta-val" id="high-vstoxx">—</span></div>
