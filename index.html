@@ -424,6 +424,16 @@ function resetWeights() {
 
 function normaliseMove(m) { return m / 5; }
 
+// Maps a score to bar % so each label (at 0/25/50/75/100%) aligns with its threshold (0/15/20/25/35)
+function scoreToBarPct(s) {
+  if      (s <= 0)  return 0;
+  else if (s <= 15) return (s / 15) * 25;
+  else if (s <= 20) return 25 + ((s - 15) / 5)  * 25;
+  else if (s <= 25) return 50 + ((s - 20) / 5)  * 25;
+  else if (s <= 35) return 75 + ((s - 25) / 10) * 25;
+  else              return 100;
+}
+
 function f2(n) { return n != null ? parseFloat(n).toFixed(2) : '—'; }
 function f1(n) { return n != null ? parseFloat(n).toFixed(1) : '—'; }
 
@@ -450,7 +460,7 @@ function renderCard(id, data, maxBar) {
   chgEl.className   = `change ${isUp ? 'up' : 'down'}`;
 
   const meterEl = document.getElementById(`meter-${id}`);
-  meterEl.style.width      = Math.min((scoreForLevel / 60) * 100, 100) + '%';
+  meterEl.style.width      = scoreToBarPct(scoreForLevel) + '%';
   meterEl.style.background = lvl.color;
 
   const badgeEl = document.getElementById(`badge-${id}`);
@@ -494,7 +504,7 @@ function renderGlobal(vix, move, vstoxx) {
   document.getElementById('global-desc').textContent = DESCS[lvl.name];
 
   const meterEl = document.getElementById('global-meter');
-  meterEl.style.width      = Math.min((composite / 60) * 100, 100) + '%';
+  meterEl.style.width      = scoreToBarPct(composite) + '%';
   meterEl.style.background = lvl.color;
 }
 
