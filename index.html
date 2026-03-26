@@ -61,9 +61,23 @@
   }
   .global-desc { font-size: 12px; letter-spacing: 0.06em; color: #8892a4; line-height: 1.6; margin-bottom: 20px; }
   .global-meter-label { font-size: 11px; letter-spacing: 0.15em; color: #8892a4; margin-bottom: 8px; }
-  .meter-track { height: 4px; background: #172035; width: 100%; margin-bottom: 6px; }
-  .meter-fill  { height: 100%; width: 0%; transition: width 1.2s ease, background 0.4s; }
-  .meter-zones { display: flex; justify-content: space-between; font-size: 10px; color: #4a5568; letter-spacing: 0.04em; }
+  .meter-track {
+    height: 5px; width: 100%; margin-bottom: 8px; border-radius: 3px; position: relative;
+    background: linear-gradient(to right,
+      rgba(34,197,94,0.25)   0%     25%,
+      rgba(148,163,184,0.25) 25%    33.3%,
+      rgba(245,158,11,0.25)  33.3%  41.7%,
+      rgba(249,115,22,0.25)  41.7%  58.3%,
+      rgba(244,63,94,0.25)   58.3%  100%
+    );
+  }
+  .meter-fill  { height: 100%; width: 0%; transition: width 1.2s ease, background 0.4s; border-radius: 3px; }
+  /* Global meter zone ticks — absolutely positioned at correct threshold % */
+  .meter-zones { position: relative; height: 14px; }
+  .mz {
+    position: absolute; transform: translateX(-50%);
+    font-size: 9px; color: #4a5568; letter-spacing: 0.04em; white-space: nowrap;
+  }
 
   /* ── GRID ── */
   .cards-grid {
@@ -114,11 +128,8 @@
   .down   { color: #22c55e; }
   .neutral{ color: #4a5568; }
 
-  .meter-label    { font-size: 10px; letter-spacing: 0.15em; color: #8892a4; margin-bottom: 7px; }
-  .meter-zones-sm {
-    display: flex; justify-content: space-between;
-    font-size: 9px; color: #4a5568; letter-spacing: 0.03em; margin-bottom: 16px;
-  }
+  .meter-label { font-size: 10px; letter-spacing: 0.15em; color: #8892a4; margin-bottom: 7px; }
+  .meter-track-sm { margin-bottom: 16px; }
 
   .divider { height: 1px; background: #172035; margin-bottom: 14px; }
   .meta-row { display: flex; justify-content: space-between; font-size: 11px; color: #8892a4; letter-spacing: 0.08em; margin-bottom: 7px; }
@@ -248,7 +259,12 @@
     <div class="global-meter-label">GLOBAL FEAR LEVEL</div>
     <div class="meter-track"><div class="meter-fill" id="global-meter"></div></div>
     <div class="meter-zones">
-      <span>CALM &lt;15</span><span>NEUTRAL 15</span><span>CAUTIOUS 20</span><span>CONCERN 25</span><span>REACT 35+</span>
+      <span class="mz" style="left:0%">CALM</span>
+      <span class="mz" style="left:25%">15</span>
+      <span class="mz" style="left:33.3%">20</span>
+      <span class="mz" style="left:41.7%">25</span>
+      <span class="mz" style="left:58.3%">35</span>
+      <span class="mz" style="left:100%">60+</span>
     </div>
   </div>
 
@@ -305,8 +321,7 @@
     <div class="price neutral" id="price-vix">--</div>
     <div class="change neutral" id="change-vix"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
-    <div class="meter-track"><div class="meter-fill" id="meter-vix"></div></div>
-    <div class="meter-zones-sm"><span>CALM&lt;15</span><span>NEUT 15</span><span>CAUT 20</span><span>35+</span></div>
+    <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-vix"></div></div>
     <div class="divider"></div>
     <div class="meta-row"><span>DAY LOW</span><span class="meta-val" id="low-vix">—</span></div>
     <div class="meta-row"><span>DAY HIGH</span><span class="meta-val" id="high-vix">—</span></div>
@@ -327,8 +342,7 @@
     <div class="price neutral" id="price-move">--</div>
     <div class="change neutral" id="change-move"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
-    <div class="meter-track"><div class="meter-fill" id="meter-move"></div></div>
-    <div class="meter-zones-sm"><span>CALM&lt;75</span><span>NEUT 100</span><span>CAUT 125</span><span>200+</span></div>
+    <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-move"></div></div>
     <div class="divider"></div>
     <div class="meta-row"><span>DAY LOW</span><span class="meta-val" id="low-move">—</span></div>
     <div class="meta-row"><span>DAY HIGH</span><span class="meta-val" id="high-move">—</span></div>
@@ -349,8 +363,7 @@
     <div class="price neutral" id="price-vstoxx">--</div>
     <div class="change neutral" id="change-vstoxx"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
-    <div class="meter-track"><div class="meter-fill" id="meter-vstoxx"></div></div>
-    <div class="meter-zones-sm"><span>CALM&lt;15</span><span>NEUT 15</span><span>CAUT 20</span><span>35+</span></div>
+    <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-vstoxx"></div></div>
     <div class="divider"></div>
     <div class="meta-row"><span>DAY LOW</span><span class="meta-val" id="low-vstoxx">—</span></div>
     <div class="meta-row"><span>DAY HIGH</span><span class="meta-val" id="high-vstoxx">—</span></div>
@@ -433,7 +446,7 @@ function renderCard(id, data, maxBar) {
   chgEl.className   = `change ${isUp ? 'up' : 'down'}`;
 
   const meterEl = document.getElementById(`meter-${id}`);
-  meterEl.style.width      = Math.min((price / maxBar) * 100, 100) + '%';
+  meterEl.style.width      = Math.min((scoreForLevel / 60) * 100, 100) + '%';
   meterEl.style.background = lvl.color;
 
   const badgeEl = document.getElementById(`badge-${id}`);
