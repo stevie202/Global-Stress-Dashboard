@@ -76,14 +76,14 @@ vercel --prod   # production deploy
 
 ## Data source
 
-Live data is fetched from **Yahoo Finance** via a lightweight serverless proxy (`/api/quote.js`) to avoid browser CORS restrictions. The proxy caches responses for 60 seconds at the Vercel edge.
+Live data is fetched from the *Options AtlasFeed* via a lightweight serverless proxy (`/api/quote.js`). The proxy caches responses for 60 seconds at the Vercel edge.
 
 Tickers used:
 - `^VIX` — CBOE Volatility Index
 - `^MOVE` — ICE BofA MOVE Index
 - `^V2TX` — VSTOXX (Euro Stoxx 50 Volatility)
 
-> Data is indicative only and subject to Yahoo Finance availability. Not financial advice.
+> Data is indicative only and subject to Options availability. Not financial advice.
 
 ---
 
