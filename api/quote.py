@@ -9,6 +9,7 @@ import json
 import os
 import re
 import sys
+import traceback
 from http.server import BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
@@ -26,12 +27,14 @@ SYMBOL_MAP = {
     'V2TX.DE': '=V2TX.XE',
 }
 
+
 def _parse_float(value):
     """Parse a float from an Activ field string, stripping trend indicators like '<-- >'."""
     if value is None or value == 'None':
         return None
     m = re.match(r'[-+]?\d*\.?\d+', str(value).strip())
     return float(m.group()) if m else None
+
 
 def _get_field(mapping, *names):
     """Return the first non-empty, non-'None' match from a list of field names."""
@@ -41,10 +44,11 @@ def _get_field(mapping, *names):
             return val
     return None
 
+
 class handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
-        self.send_response(200)
+        self.send_response(204)  # No Content is idiomatic for preflight
         self._cors()
         self.end_headers()
 
@@ -62,7 +66,7 @@ class handler(BaseHTTPRequestHandler):
         session = None
         try:
             session = common.connect_session()
-            msg     = session.snapshot(activ_symbol)
+            msg = session.snapshot(activ_symbol)
 
             f = {
                 session.metadata.get_field_name(msg.data_source_id, fid): str(field)
@@ -94,10 +98,9 @@ class handler(BaseHTTPRequestHandler):
             })
 
         except Exception as e:
-            import traceback
             print(f'[quote] ERROR for {activ_symbol}: {e}')
             traceback.print_exc()
-            self._json(500, {'error': 'Internal proxy error', 'detail': str(e)})
+            self._json(500, {'error': 'Internal proxy error'})
 
         finally:
             if session:
@@ -109,15 +112,23 @@ class handler(BaseHTTPRequestHandler):
     # ── helpers ────────────────────────────────────────────────────────────
 
     def _cors(self):
-        self.send_header('Access-Control-Allow-Origin',  '*')
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', '*')
+        self.send_header('Access-Control-Max-Age', '86400')
 
     def _json(self, status, data):
-        body = json.dumps(data).encode()
+        body = json.dumps(data, ensure_ascii=True).encode('utf-8')
         self.send_response(status)
         self._cors()
-        self.send_header('Content-Type',   'application/json')
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
         self.send_header('Content-Length', str(len(body)))
-        self.send_header('Cache-Control',  's-maxage=60, stale-while-revalidate=120')
+
+        # Only cache successful quotes at the edge; never cache errors
+        if status == 200:
+            self.send_header('Cache-Control', 's-maxage=60, stale-while-revalidate=120')
+        else:
+            self.send_header('Cache-Control', 'no-store')
+
         self.end_headers()
         self.wfile.write(body)
