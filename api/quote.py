@@ -56,10 +56,13 @@ class handler(BaseHTTPRequestHandler):
             session = common.connect_session()
             msg     = session.snapshot(activ_symbol)
 
-            f = {
-                session.metadata.get_field_name(msg.data_source_id, fid): str(field)
-                for fid, field in msg.fields.items()
-            }
+             f = {
+            session.metadata.get_field_name(msg.data_source_id, fid): str(field)
+            for fid, field in msg.fields.items()
+        }
+        # DEBUG: inspect raw fields for MOVE
+        if symbol == '^MOVE':
+            print(f"[quote] MOVE raw fields: {json.dumps(f, indent=2)}")
 
             price     = _parse_float(f.get('Trade')) or _parse_float(f.get('Close'))
             prev      = _parse_float(f.get('PreviousClose'))
