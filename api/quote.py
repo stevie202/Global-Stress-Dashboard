@@ -24,6 +24,13 @@ SYMBOL_MAP = {
     '^MOVE':   '=MOVE.NGI',
     'V2TX.DE': '=V2TX.XE',
 }
+def _get_field(mapping, *names):
+    """Return the first non-empty, non-'None' match from a list of field names."""
+    for name in names:
+        val = mapping.get(name)
+        if val is not None and val != '' and val != 'None':
+            return val
+    return None
 
 def _parse_float(value):
     """Parse a float from an Activ field string, stripping trend indicators like '<-- >'."""
@@ -40,7 +47,7 @@ class handler(BaseHTTPRequestHandler):
         self._cors()
         self.end_headers()
 
-    def do_GET(self):
+        def do_GET(self):
         params = parse_qs(urlparse(self.path).query)
         symbol = params.get('symbol', [None])[0]
 
@@ -56,20 +63,24 @@ class handler(BaseHTTPRequestHandler):
             session = common.connect_session()
             msg     = session.snapshot(activ_symbol)
 
-             f = {
-            session.metadata.get_field_name(msg.data_source_id, fid): str(field)
-            for fid, field in msg.fields.items()
-        }
-        # DEBUG: inspect raw fields for MOVE
-        if symbol == '^MOVE':
-            print(f"[quote] MOVE raw fields: {json.dumps(f, indent=2)}")
+            f = {
+                session.metadata.get_field_name(msg.data_source_id, fid): str(field)
+                for fid, field in msg.fields.items()
+            }
 
-            price     = _parse_float(f.get('Trade')) or _parse_float(f.get('Close'))
-            prev      = _parse_float(f.get('PreviousClose'))
-            high      = _parse_float(f.get('TradeHigh'))
-            low       = _parse_float(f.get('TradeLow'))
-            change    = _parse_float(f.get('NetChange'))
-            changePct = _parse_float(f.get('PercentChange'))
+            # DEBUG: inspect raw fields for MOVE (only the print is inside the if)
+            if symbol == '^MOVE':
+                print(f"[quote] MOVE raw fields: {json.dumps(f, indent=2)}")
+
+            # Extract with fallbacks — handles different field names per asset class
+            price     = _parse_float(_get_field(f, 'Trade', 'Close', 'Last'))
+            prev      = _parse_float(_get_field(f, 'PreviousClose', 'PrevClose'))
+            high      = _parse_float(_get_field(f, 'TradeHigh', 'High', 'DayHigh', 'SessionHigh', 'BestHigh'))
+            low       = _parse_float(_get_field(f, 'TradeLow', 'Low', 'DayLow', 'SessionLow', 'BestLow'))
+            change    = _parse_float(_get_field(f, 'NetChange', 'Change'))
+            changePct = _parse_float(_get_field(f, 'PercentChange', 'PctChange'))
+
+            # Fallback math if the feed didn't publish explicit change fields
             if change is None and price is not None and prev is not None:
                 change    = price - prev
                 changePct = (change / prev) * 100 if prev else None
@@ -83,7 +94,7 @@ class handler(BaseHTTPRequestHandler):
                 'low':         low,
                 'high':        high,
                 'marketState': 'REGULAR',
-                'timestamp':   f.get('TradeDate'),
+                'timestamp':   _get_field(f, 'TradeDate', 'Date'),
             })
 
         except Exception as e:
@@ -98,6 +109,7 @@ class handler(BaseHTTPRequestHandler):
                     session.disconnect()
                 except Exception:
                     pass
+
 
     # ── helpers ────────────────────────────────────────────────────────────
 
