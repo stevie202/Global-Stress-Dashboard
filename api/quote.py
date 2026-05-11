@@ -1,4 +1,5 @@
 # api/quote.py
+
 # Vercel Python serverless function — snapshots Activ Financial to avoid browser CORS restrictions.
 # Handles: ^VIX  ^MOVE  V2TX.DE
 #
@@ -24,13 +25,6 @@ SYMBOL_MAP = {
     '^MOVE':   '=MOVE.NGI',
     'V2TX.DE': '=V2TX.XE',
 }
-def _get_field(mapping, *names):
-    """Return the first non-empty, non-'None' match from a list of field names."""
-    for name in names:
-        val = mapping.get(name)
-        if val is not None and val != '' and val != 'None':
-            return val
-    return None
 
 def _parse_float(value):
     """Parse a float from an Activ field string, stripping trend indicators like '<-- >'."""
@@ -39,6 +33,13 @@ def _parse_float(value):
     m = re.match(r'[-+]?\d*\.?\d+', str(value).strip())
     return float(m.group()) if m else None
 
+def _get_field(mapping, *names):
+    """Return the first non-empty, non-'None' match from a list of field names."""
+    for name in names:
+        val = mapping.get(name)
+        if val is not None and val != '' and val != 'None':
+            return val
+    return None
 
 class handler(BaseHTTPRequestHandler):
 
@@ -47,7 +48,7 @@ class handler(BaseHTTPRequestHandler):
         self._cors()
         self.end_headers()
 
-        def do_GET(self):
+    def do_GET(self):
         params = parse_qs(urlparse(self.path).query)
         symbol = params.get('symbol', [None])[0]
 
@@ -68,7 +69,7 @@ class handler(BaseHTTPRequestHandler):
                 for fid, field in msg.fields.items()
             }
 
-            # DEBUG: inspect raw fields for MOVE (only the print is inside the if)
+            # DEBUG: inspect raw fields for MOVE
             if symbol == '^MOVE':
                 print(f"[quote] MOVE raw fields: {json.dumps(f, indent=2)}")
 
@@ -80,7 +81,6 @@ class handler(BaseHTTPRequestHandler):
             change    = _parse_float(_get_field(f, 'NetChange', 'Change'))
             changePct = _parse_float(_get_field(f, 'PercentChange', 'PctChange'))
 
-            # Fallback math if the feed didn't publish explicit change fields
             if change is None and price is not None and prev is not None:
                 change    = price - prev
                 changePct = (change / prev) * 100 if prev else None
@@ -109,7 +109,6 @@ class handler(BaseHTTPRequestHandler):
                     session.disconnect()
                 except Exception:
                     pass
-
 
     # ── helpers ────────────────────────────────────────────────────────────
 
