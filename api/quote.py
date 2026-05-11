@@ -69,15 +69,11 @@ class handler(BaseHTTPRequestHandler):
                 for fid, field in msg.fields.items()
             }
 
-            # DEBUG: inspect raw fields for MOVE
-            if symbol == '^MOVE':
-                print(f"[quote] MOVE raw fields: {json.dumps(f, indent=2)}")
-
             # Extract with fallbacks — handles different field names per asset class
             price     = _parse_float(_get_field(f, 'Trade', 'Close', 'Last'))
             prev      = _parse_float(_get_field(f, 'PreviousClose', 'PrevClose'))
-            high      = _parse_float(_get_field(f, 'TradeHigh', 'High', 'DayHigh', 'SessionHigh', 'BestHigh'))
-            low       = _parse_float(_get_field(f, 'TradeLow', 'Low', 'DayLow', 'SessionLow', 'BestLow'))
+            high      = _parse_float(_get_field(f, 'TradeHigh', 'High', 'DayHigh', 'SessionHigh', 'BestHigh', 'PreviousTradeHigh'))
+            low       = _parse_float(_get_field(f, 'TradeLow', 'Low', 'DayLow', 'SessionLow', 'BestLow', 'PreviousTradeLow'))
             change    = _parse_float(_get_field(f, 'NetChange', 'Change'))
             changePct = _parse_float(_get_field(f, 'PercentChange', 'PctChange'))
 
