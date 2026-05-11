@@ -6,11 +6,39 @@
 <title>Global Stress Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg-page:       #0b0f1e;
+    --bg-card:       #131929;
+    --bg-mask:       #131929;
+    --border:        #1e2d45;
+    --border-subtle: #172035;
+
+    --text-main:     #e2e8f0;
+    --text-muted:    #8892a4;
+    --text-silver:   #94a3b8;
+    --text-dim:      #4a5568;
+    --text-dimmer:   #6b7a99;
+    --text-bright:   #cbd5e1;
+
+    --c-green:       #22c55e;
+    --c-red:         #f43f5e;
+    --c-amber:       #f59e0b;
+    --c-orange:      #f97316;
+
+    --c-green-25:    rgba(34, 197, 94, 0.25);
+    --c-silver-25:   rgba(148, 163, 184, 0.25);
+    --c-amber-25:    rgba(245, 158, 11, 0.25);
+    --c-orange-25:   rgba(249, 115, 22, 0.25);
+    --c-red-25:      rgba(244, 63, 94, 0.25);
+    --c-green-40:    rgba(34, 197, 94, 0.4);
+    --c-green-50:    rgba(34, 197, 94, 0.5);
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: #0b0f1e;
-    color: #e2e8f0;
+    background: var(--bg-page);
+    color: var(--text-main);
     font-family: 'IBM Plex Mono', monospace;
     min-height: 100vh;
     display: flex;
@@ -22,13 +50,13 @@
 
   /* ── HEADER ── */
   .header { text-align: center; margin-bottom: 8px; }
-  .label    { font-size: 13px; letter-spacing: 0.3em;  color: #8892a4; margin-bottom: 4px; }
-  .subtitle { font-size: 15px; letter-spacing: 0.15em; color: #94a3b8; }
+  .label    { font-size: 13px; letter-spacing: 0.3em;  color: var(--text-muted); margin-bottom: 4px; }
+  .subtitle { font-size: 15px; letter-spacing: 0.15em; color: var(--text-silver); }
 
   /* ── GLOBAL COMPOSITE CARD ── */
   .global-card {
     width: 100%;
-    background: #131929; border: 1px solid #1e2d45;
+    background: var(--bg-card); border: 1px solid var(--border);
     padding: 28px 32px;
   }
 
@@ -48,7 +76,7 @@
     justify-content: space-between;
     margin-bottom: 12px;
   }
-  .global-score-label { font-size: 11px; letter-spacing: 0.2em; color: #8892a4; }
+  .global-score-label { font-size: 11px; letter-spacing: 0.2em; color: var(--text-muted); }
   .global-score {
     font-size: 72px; font-weight: 700;
     letter-spacing: -0.02em; line-height: 1;
@@ -59,20 +87,20 @@
     letter-spacing: 0.2em; text-transform: uppercase;
     padding: 7px 14px; border: 1px solid currentColor;
   }
-  .global-desc { font-size: 12px; letter-spacing: 0.06em; color: #8892a4; line-height: 1.6; margin-bottom: 20px; }
-  .global-meter-label { font-size: 11px; letter-spacing: 0.15em; color: #8892a4; margin-bottom: 8px; }
+  .global-desc { font-size: 12px; letter-spacing: 0.06em; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+  .global-meter-label { font-size: 11px; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 8px; }
   .meter-track {
     height: 5px; width: 100%; margin-bottom: 8px; border-radius: 3px; position: relative;
     background: linear-gradient(to right,
-      rgba(34,197,94,0.25)   0%     25%,
-      rgba(148,163,184,0.25) 25%    33.3%,
-      rgba(245,158,11,0.25)  33.3%  41.7%,
-      rgba(249,115,22,0.25)  41.7%  58.3%,
-      rgba(244,63,94,0.25)   58.3%  100%
+      var(--c-green-25)   0%     25%,
+      var(--c-silver-25)  25%    33.3%,
+      var(--c-amber-25)   33.3%  41.7%,
+      var(--c-orange-25)  41.7%  58.3%,
+      var(--c-red-25)     58.3%  100%
     );
   }
   .meter-fill  { height: 100%; width: 0%; transition: width 1.2s ease, background 0.4s; border-radius: 3px; }
-  .meter-zones    { display: flex; justify-content: space-between; font-size: 10px; color: #4a5568; letter-spacing: 0.04em; }
+  .meter-zones    { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-dim); letter-spacing: 0.04em; }
 
   /* ── GRID ── */
   .cards-grid {
@@ -89,7 +117,7 @@
 
   /* ── INDEX CARD ── */
   .card {
-    background: #131929; border: 1px solid #1e2d45;
+    background: var(--bg-card); border: 1px solid var(--border);
     padding: 24px 22px;
     display: flex; flex-direction: column;
     position: relative;
@@ -99,16 +127,16 @@
     align-items: flex-start; margin-bottom: 14px;
   }
   .card-ticker {
-    font-size: 15px; font-weight: 700; letter-spacing: 0.12em; color: #e2e8f0;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.12em; color: var(--text-main);
   }
   a.card-ticker {
     text-decoration: none;
     color: inherit;
     transition: color 0.15s;
   }
-  a.card-ticker:hover { color: #22c55e; }
+  a.card-ticker:hover { color: var(--c-green); }
 
-  .card-region { font-size: 11px; letter-spacing: 0.1em; color: #8892a4; margin-top: 3px; text-transform: uppercase; min-height: 2.4em; line-height: 1.2;}
+  .card-region { font-size: 11px; letter-spacing: 0.1em; color: var(--text-muted); margin-top: 3px; text-transform: uppercase; min-height: 2.4em; line-height: 1.2; }
 
   .badge {
     display: inline-block; font-size: 11px; font-weight: 600;
@@ -119,117 +147,130 @@
 
   .price  { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin-bottom: 8px; transition: color 0.4s; }
   .change { font-size: 13px; font-weight: 500; letter-spacing: 0.05em; margin-bottom: 16px; min-height: 16px; }
-  .up     { color: #f43f5e; }
-  .down   { color: #22c55e; }
-  .neutral{ color: #4a5568; }
+  .up     { color: var(--c-red); }
+  .down   { color: var(--c-green); }
+  .neutral{ color: var(--text-dim); }
 
-  .meter-label { font-size: 10px; letter-spacing: 0.15em; color: #8892a4; margin-bottom: 7px; }
+  .meter-label { font-size: 10px; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 7px; }
   .meter-track-sm { margin-bottom: 4px; }
-  .meter-zones-sm { display: flex; justify-content: space-between; font-size: 9px; color: #4a5568; letter-spacing: 0.03em; margin-bottom: 12px; }
+  .meter-zones-sm { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); letter-spacing: 0.03em; margin-bottom: 12px; }
 
-  .divider { height: 1px; background: #172035; margin-bottom: 14px; }
-  .meta-row { display: flex; justify-content: space-between; font-size: 11px; color: #8892a4; letter-spacing: 0.08em; margin-bottom: 7px; }
-  .meta-val { color: #cbd5e1; }
+  .divider { height: 1px; background: var(--border-subtle); margin-bottom: 14px; }
+  .meta-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: 7px; }
+  .meta-val { color: var(--text-bright); }
 
   .card-desc {
-    font-size: 11px; color: #8892a4; letter-spacing: 0.04em;
+    font-size: 11px; color: var(--text-muted); letter-spacing: 0.04em;
     line-height: 1.65; margin-top: auto;
-    padding-top: 14px; border-top: 1px solid #172035;
+    padding-top: 14px; border-top: 1px solid var(--border-subtle);
   }
 
   /* ── GUIDE (full-width horizontal strip) ── */
   .guide {
     width: 100%; max-width: 780px;
-    background: #131929; border: 1px solid #1e2d45; padding: 14px 20px;
+    background: var(--bg-card); border: 1px solid var(--border); padding: 14px 20px;
   }
-  .guide-title { font-size: 11px; letter-spacing: 0.2em; color: #6b7a99; margin-bottom: 12px; }
+  .guide-title { font-size: 11px; letter-spacing: 0.2em; color: var(--text-dimmer); margin-bottom: 12px; }
   .guide-items { display: flex; }
   .guide-item {
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
-    padding: 4px 6px; border-right: 1px solid #172035; text-align: center;
+    padding: 4px 6px; border-right: 1px solid var(--border-subtle); text-align: center;
   }
   .guide-item:last-child { border-right: none; }
-  .guide-range { font-size: 10px; color: #4a5568; letter-spacing: 0.03em; }
-  .guide-sub   { font-size: 9px;  color: #4a5568; letter-spacing: 0.03em; }
-  .gr    { color: #4a5568; }
-  .calm  { color: #22c55e; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
-  .neut  { color: #94a3b8; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
-  .caut  { color: #f59e0b; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
-  .fear  { color: #f97316; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
-  .xfear { color: #f43f5e; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .guide-range { font-size: 10px; color: var(--text-dim); letter-spacing: 0.03em; }
+  .guide-sub   { font-size: 9px;  color: var(--text-dim); letter-spacing: 0.03em; }
+  .gr    { color: var(--text-dim); }
+  .calm  { color: var(--c-green); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .neut  { color: var(--text-silver); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .caut  { color: var(--c-amber); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .fear  { color: var(--c-orange); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
+  .xfear { color: var(--c-red); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; }
 
   /* ── FOOTER ── */
   .footer-row {
     width: 100%; max-width: 780px;
     display: flex; justify-content: space-between; align-items: center;
   }
-  .live { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #6b7a99; letter-spacing: 0.1em; }
-  .dot  { width: 5px; height: 5px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
+  .live { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text-dimmer); letter-spacing: 0.1em; }
+  .dot  { width: 5px; height: 5px; background: var(--c-green); border-radius: 50%; animation: pulse 2s infinite; }
   @keyframes pulse {
-    0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
-    50%      { opacity:0.5; box-shadow: 0 0 0 4px rgba(34,197,94,0); }
+    0%,100% { opacity:1; box-shadow: 0 0 0 0 var(--c-green-50); }
+    50%      { opacity:0.5; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0); }
   }
   .refresh-btn {
-    background: none; border: 1px solid #1e2d45; color: #6b7a99;
+    background: none; border: 1px solid var(--border); color: var(--text-dimmer);
     font-family: 'IBM Plex Mono', monospace; font-size: 10px;
     letter-spacing: 0.15em; padding: 5px 10px; cursor: pointer; transition: all 0.15s;
   }
-  .refresh-btn:hover   { border-color: #22c55e; color: #22c55e; }
+  .refresh-btn:hover   { border-color: var(--c-green); color: var(--c-green); }
   .refresh-btn:disabled { opacity: 0.3; cursor: default; }
-  .updated { font-size: 10px; color: #4a5568; letter-spacing: 0.08em; margin-top: 6px; }
+  .updated { font-size: 10px; color: var(--text-dim); letter-spacing: 0.08em; margin-top: 6px; }
 
   /* ── LOADERS ── */
   .loading-mask {
-    position: absolute; inset: 0; background: #131929;
+    position: absolute; inset: 0; background: var(--bg-mask);
     display: flex; align-items: center; justify-content: center; z-index: 10;
   }
   .spinner {
     width: 18px; height: 18px;
-    border: 2px solid #1e2d45; border-top-color: #22c55e;
+    border: 2px solid var(--border); border-top-color: var(--c-green);
     border-radius: 50%; animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .error-note { font-size: 10px; color: #f43f5e; letter-spacing: 0.1em; text-align: center; padding: 8px; }
+  .error-note { font-size: 10px; color: var(--c-red); letter-spacing: 0.1em; text-align: center; padding: 8px; }
   .spinning   { animation: spin 1s linear infinite; display: inline-block; }
 
   /* ── WEIGHT PANEL ── */
   .weight-panel {
-    background: #131929; border: 1px solid #1e2d45;
+    background: var(--bg-card); border: 1px solid var(--border);
     padding: 16px 22px; display: flex; flex-direction: column; justify-content: center;
   }
   .weight-header {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 14px;
   }
-  .weight-title { font-size: 11px; letter-spacing: 0.2em; color: #6b7a99; }
+  .weight-title { font-size: 11px; letter-spacing: 0.2em; color: var(--text-dimmer); }
   .weight-reset {
-    background: none; border: 1px solid #1e2d45; color: #6b7a99;
+    background: none; border: 1px solid var(--border); color: var(--text-dimmer);
     font-family: 'IBM Plex Mono', monospace; font-size: 9px;
     letter-spacing: 0.15em; padding: 3px 8px; cursor: pointer; transition: all 0.15s;
   }
-  .weight-reset:hover { border-color: #22c55e; color: #22c55e; }
+  .weight-reset:hover { border-color: var(--c-green); color: var(--c-green); }
   .weight-row {
     display: grid; grid-template-columns: 52px 1fr 38px;
     align-items: center; gap: 12px; margin-bottom: 10px;
   }
   .weight-row:last-child { margin-bottom: 0; }
-  .weight-label { font-size: 11px; letter-spacing: 0.1em; color: #94a3b8; }
-  .weight-pct   { font-size: 11px; letter-spacing: 0.05em; color: #22c55e; text-align: right; }
+  .weight-label { font-size: 11px; letter-spacing: 0.1em; color: var(--text-silver); }
+  .weight-pct   { font-size: 11px; letter-spacing: 0.05em; color: var(--c-green); text-align: right; }
   input[type=range].weight-slider {
     -webkit-appearance: none; appearance: none;
     width: 100%; height: 3px;
-    background: #1e2d45; outline: none; border-radius: 2px; cursor: pointer;
+    background: var(--border); outline: none; border-radius: 2px; cursor: pointer;
   }
   input[type=range].weight-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 13px; height: 13px; border-radius: 50%;
-    background: #22c55e; cursor: pointer;
-    box-shadow: 0 0 4px rgba(34,197,94,0.4);
+    background: var(--c-green); cursor: pointer;
+    box-shadow: 0 0 4px var(--c-green-40);
   }
   input[type=range].weight-slider::-moz-range-thumb {
     width: 13px; height: 13px; border-radius: 50%;
-    background: #22c55e; cursor: pointer; border: none;
-    box-shadow: 0 0 4px rgba(34,197,94,0.4);
+    background: var(--c-green); cursor: pointer; border: none;
+    box-shadow: 0 0 4px var(--c-green-40);
+  }
+
+  /* ── ACCESSIBILITY ── */
+  button:focus-visible,
+  a:focus-visible,
+  input[type=range]:focus-visible {
+    outline: 2px solid var(--c-green);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dot, .spinner, .spinning { animation: none !important; }
+    .meter-fill { transition: none !important; }
   }
 </style>
 </head>
@@ -308,7 +349,7 @@
     <div class="loading-mask" id="loader-vix"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <a class="card-ticker" href="https://www.cboe.com/tradable-products/vix/#market-data" target="_blank">VIX</a>
+        <a class="card-ticker" href="https://www.cboe.com/tradable-products/vix/#market-data" target="_blank" rel="noopener noreferrer">VIX</a>
         <div class="card-region">US Equity · S&amp;P 500</div>
       </div>
       <div class="badge neutral" id="badge-vix">—</div>
@@ -332,7 +373,7 @@
     <div class="loading-mask" id="loader-move"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <a class="card-ticker" href="https://indices.ice.com/getQuickChart?index=MOVE&currency=USD" target="_blank">MOVE</a>
+        <a class="card-ticker" href="https://indices.ice.com/getQuickChart?index=MOVE&currency=USD" target="_blank" rel="noopener noreferrer">MOVE</a>
         <div class="card-region">US Bonds · Treasury</div>
       </div>
       <div class="badge neutral" id="badge-move">—</div>
@@ -356,7 +397,7 @@
     <div class="loading-mask" id="loader-vstoxx"><div class="spinner"></div></div>
     <div class="card-header">
       <div>
-        <a class="card-ticker" href="https://stoxx.com/index/v2tx/" target="_blank">VSTOXX</a>
+        <a class="card-ticker" href="https://stoxx.com/index/v2tx/" target="_blank" rel="noopener noreferrer">VSTOXX</a>
         <div class="card-region">Europe · Euro Stoxx 50</div>
       </div>
       <div class="badge neutral" id="badge-vstoxx">—</div>
@@ -379,28 +420,71 @@
 
 <!-- FOOTER -->
 <div class="footer-row">
-  <div class="live"><div class="dot"></div>Powered by <a href="https://olympus.options-it.com/atlasvision-public/" target="_blank" style="color:inherit;text-decoration:underline;margin:0 4px;">Options AtlasFeed</a>(Status: LIVE)</div>
+  <div class="live"><div class="dot"></div>Powered by <a href="https://olympus.options-it.com/atlasvision-public/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;margin:0 4px;">Options AtlasFeed</a>(Status: LIVE)</div>
   <button class="refresh-btn" id="refreshBtn" onclick="loadAll()">↺ REFRESH</button>
 </div>
 <div class="updated" id="updated"></div>
 
 <script>
+// ── CONFIG ─────────────────────────────────────────────────────────────────
+const DEFAULTS = { vix: 50, move: 30, vstoxx: 20 };
+let cache = {};
+let currentController = null;
+
+const SOURCES = [
+  { id: 'vix',    symbol: '^VIX'    },
+  { id: 'move',   symbol: '^MOVE'   },
+  { id: 'vstoxx', symbol: 'V2TX.DE' },
+];
+
+// ── DOM CACHE ─────────────────────────────────────────────────────────────
+const ui = {};
+SOURCES.forEach(s => {
+  ui[s.id] = {
+    price:  document.getElementById(`price-${s.id}`),
+    change: document.getElementById(`change-${s.id}`),
+    meter:  document.getElementById(`meter-${s.id}`),
+    badge:  document.getElementById(`badge-${s.id}`),
+    low:    document.getElementById(`low-${s.id}`),
+    high:   document.getElementById(`high-${s.id}`),
+    prev:   document.getElementById(`prev-${s.id}`),
+    loader: document.getElementById(`loader-${s.id}`),
+  };
+});
+
+const weightEls = {
+  vix:    document.getElementById('w-vix'),
+  move:   document.getElementById('w-move'),
+  vstoxx: document.getElementById('w-vstoxx'),
+};
+const wpEls = {
+  vix:    document.getElementById('wp-vix'),
+  move:   document.getElementById('wp-move'),
+  vstoxx: document.getElementById('wp-vstoxx'),
+};
+const globalEls = {
+  score: document.getElementById('global-score'),
+  badge: document.getElementById('global-badge'),
+  desc:  document.getElementById('global-desc'),
+  meter: document.getElementById('global-meter'),
+};
+const refreshBtn = document.getElementById('refreshBtn');
+const updatedEl  = document.getElementById('updated');
+
 // ── THRESHOLDS ─────────────────────────────────────────────────────────────
 function levelFromScore(v) {
-  if      (v < 15) return { name:'CALM',     color:'#22c55e' };
-  else if (v < 20) return { name:'NEUTRAL',  color:'#94a3b8' };
-  else if (v < 25) return { name:'CAUTIOUS', color:'#f59e0b' };
-  else if (v < 35) return { name:'CONCERN',  color:'#f97316' };
-  else             return { name:'REACT',    color:'#f43f5e' };
+  if      (v < 15) return { name:'CALM',     color:'var(--c-green)' };
+  else if (v < 20) return { name:'NEUTRAL',  color:'var(--text-silver)' };
+  else if (v < 25) return { name:'CAUTIOUS', color:'var(--c-amber)' };
+  else if (v < 35) return { name:'CONCERN',  color:'var(--c-orange)' };
+  else             return { name:'REACT',    color:'var(--c-red)' };
 }
 
 // ── WEIGHTS ─────────────────────────────────────────────────────────────────
-const DEFAULTS = { vix: 50, move: 30, vstoxx: 20 };
-
 function getWeights() {
-  const vix    = parseInt(document.getElementById('w-vix').value);
-  const move   = parseInt(document.getElementById('w-move').value);
-  const vstoxx = parseInt(document.getElementById('w-vstoxx').value);
+  const vix    = parseInt(weightEls.vix.value, 10);
+  const move   = parseInt(weightEls.move.value, 10);
+  const vstoxx = parseInt(weightEls.vstoxx.value, 10);
   const total  = vix + move + vstoxx || 1;
   return { vix: vix / total, move: move / total, vstoxx: vstoxx / total };
 }
@@ -408,23 +492,22 @@ function getWeights() {
 function updateWeights() {
   const w = getWeights();
   const pct = k => Math.round(w[k] * 100) + '%';
-  document.getElementById('wp-vix').textContent    = pct('vix');
-  document.getElementById('wp-move').textContent   = pct('move');
-  document.getElementById('wp-vstoxx').textContent = pct('vstoxx');
+  wpEls.vix.textContent    = pct('vix');
+  wpEls.move.textContent   = pct('move');
+  wpEls.vstoxx.textContent = pct('vstoxx');
   if (cache.vix && cache.move && cache.vstoxx)
     renderGlobal(cache.vix.price, cache.move.price, cache.vstoxx.price);
 }
 
 function resetWeights() {
-  document.getElementById('w-vix').value    = DEFAULTS.vix;
-  document.getElementById('w-move').value   = DEFAULTS.move;
-  document.getElementById('w-vstoxx').value = DEFAULTS.vstoxx;
+  weightEls.vix.value    = DEFAULTS.vix;
+  weightEls.move.value   = DEFAULTS.move;
+  weightEls.vstoxx.value = DEFAULTS.vstoxx;
   updateWeights();
 }
 
 function normaliseMove(m) { return m / 5; }
 
-// Maps a score to bar % so each label (at 0/25/50/75/100%) aligns with its threshold (0/15/20/25/35)
 function scoreToBarPct(s) {
   if      (s <= 0)  return 0;
   else if (s <= 15) return (s / 15) * 25;
@@ -434,11 +517,13 @@ function scoreToBarPct(s) {
   else              return 100;
 }
 
-function f2(n) { return n != null ? parseFloat(n).toFixed(2) : '—'; }
-function f1(n) { return n != null ? parseFloat(n).toFixed(1) : '—'; }
+function f2(n) { return Number.isFinite(n) ? n.toFixed(2) : '—'; }
+function f1(n) { return Number.isFinite(n) ? n.toFixed(1) : '—'; }
 
 // ── CARD RENDERER ──────────────────────────────────────────────────────────
-function renderCard(id, data, maxBar) {
+function renderCard(id, data) {
+  const els = ui[id];
+
   const price     = parseFloat(data.price);
   const change    = parseFloat(data.change);
   const changePct = parseFloat(data.changePct);
@@ -448,51 +533,50 @@ function renderCard(id, data, maxBar) {
 
   const scoreForLevel = id === 'move' ? normaliseMove(price) : price;
   const lvl  = levelFromScore(scoreForLevel);
-  const isUp = change >= 0;
-  const dp   = id === 'move' ? 1 : 2;
+  const isUp = Number.isFinite(change) ? change >= 0 : null;
+  const priceClass = isUp === true ? 'up' : isUp === false ? 'down' : 'neutral';
+  const dp = id === 'move' ? 1 : 2;
 
-  const priceEl = document.getElementById(`price-${id}`);
-  priceEl.textContent = dp === 1 ? f1(price) : f2(price);
-  priceEl.className   = `price ${isUp ? 'up' : 'down'}`;
+  els.price.textContent = dp === 1 ? f1(price) : f2(price);
+  els.price.className   = `price ${priceClass}`;
 
-  const chgEl = document.getElementById(`change-${id}`);
-  chgEl.textContent = `${isUp ? '▲' : '▼'} ${Math.abs(change).toFixed(dp)}  (${Math.abs(changePct).toFixed(2)}%)`;
-  chgEl.className   = `change ${isUp ? 'up' : 'down'}`;
-
-  const meterEl = document.getElementById(`meter-${id}`);
-  meterEl.style.width      = scoreToBarPct(scoreForLevel) + '%';
-  meterEl.style.background = lvl.color;
-
-  const badgeEl = document.getElementById(`badge-${id}`);
-  badgeEl.textContent       = lvl.name;
-  badgeEl.style.color       = lvl.color;
-  badgeEl.style.borderColor = lvl.color;
-
-  document.getElementById(`low-${id}`).textContent  = low  != null ? low.toFixed(dp)  : '—';
-  document.getElementById(`high-${id}`).textContent = high != null ? high.toFixed(dp) : '—';
-  const prevEl = document.getElementById(`prev-${id}`);
-  if (prev != null) {
-    prevEl.textContent       = prev.toFixed(dp);
-    prevEl.style.color       = levelFromScore(id === 'move' ? normaliseMove(prev) : prev).color;
+  els.change.className = `change ${priceClass}`;
+  if (isUp === null) {
+    els.change.textContent = '—';
+  } else {
+    const arr = isUp ? '▲' : '▼';
+    els.change.textContent = `${arr} ${Math.abs(change).toFixed(dp)}  (${Math.abs(changePct).toFixed(2)}%)`;
   }
 
-  document.getElementById(`loader-${id}`).style.display = 'none';
+  els.meter.style.width      = scoreToBarPct(scoreForLevel) + '%';
+  els.meter.style.background = lvl.color;
+
+  els.badge.textContent       = lvl.name;
+  els.badge.style.color       = lvl.color;
+  els.badge.style.borderColor = lvl.color;
+
+  els.low.textContent  = low  != null ? low.toFixed(dp)  : '—';
+  els.high.textContent = high != null ? high.toFixed(dp) : '—';
+
+  if (prev != null) {
+    els.prev.textContent       = prev.toFixed(dp);
+    els.prev.style.color       = levelFromScore(id === 'move' ? normaliseMove(prev) : prev).color;
+  }
+
+  els.loader.style.display = 'none';
 }
 
-// ── GLOBAL COMPOSITE ───────────────────────────────────────────────────────
+// ── GLOBAL COMPOSITE ─────────────────────────────────────────────────────
 function renderGlobal(vix, move, vstoxx) {
   const w = getWeights();
   const composite = (vix * w.vix) + (normaliseMove(move) * w.move) + (vstoxx * w.vstoxx);
   const lvl = levelFromScore(composite);
 
-  const scoreEl = document.getElementById('global-score');
-  scoreEl.textContent = composite.toFixed(1);
-  scoreEl.style.color = lvl.color;
-
-  const badgeEl = document.getElementById('global-badge');
-  badgeEl.textContent       = lvl.name;
-  badgeEl.style.color       = lvl.color;
-  badgeEl.style.borderColor = lvl.color;
+  globalEls.score.textContent       = composite.toFixed(1);
+  globalEls.score.style.color       = lvl.color;
+  globalEls.badge.textContent       = lvl.name;
+  globalEls.badge.style.color       = lvl.color;
+  globalEls.badge.style.borderColor = lvl.color;
 
   const DESCS = {
     CALM:     'Markets are tranquil. Low volatility, high investor confidence.',
@@ -501,54 +585,50 @@ function renderGlobal(vix, move, vstoxx) {
     CONCERN:  'Significant stress. Risk-off sentiment building across markets.',
     REACT:    'Extreme fear. Markets in crisis mode — review and take action.',
   };
-  document.getElementById('global-desc').textContent = DESCS[lvl.name];
+  globalEls.desc.textContent = DESCS[lvl.name];
 
-  const meterEl = document.getElementById('global-meter');
-  meterEl.style.width      = scoreToBarPct(composite) + '%';
-  meterEl.style.background = lvl.color;
+  globalEls.meter.style.width      = scoreToBarPct(composite) + '%';
+  globalEls.meter.style.background = lvl.color;
 }
 
 function showError(id, msg) {
-  const loader = document.getElementById(`loader-${id}`);
+  const loader = ui[id].loader;
   loader.style.display = 'flex';
-  loader.innerHTML = `<span class="error-note">${msg}</span>`;
+  loader.replaceChildren();
+  const span = document.createElement('span');
+  span.className = 'error-note';
+  span.textContent = msg;
+  loader.appendChild(span);
 }
 
 // ── FETCH ──────────────────────────────────────────────────────────────────
-async function fetchQuote(symbol) {
-  const res = await fetch(`/api/quote?symbol=${encodeURIComponent(symbol)}`);
+async function fetchQuote(symbol, signal) {
+  const res = await fetch(`/api/quote?symbol=${encodeURIComponent(symbol)}`, { signal });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   return res.json();
 }
 
-const SOURCES = [
-  { id:'vix',    symbol:'^VIX',    maxBar:60  },
-  { id:'move',   symbol:'^MOVE',   maxBar:250 },
-  { id:'vstoxx', symbol:'V2TX.DE', maxBar:60  },
-];
-
-let cache = {};
-
 async function loadAll() {
-  const btn = document.getElementById('refreshBtn');
-  btn.disabled = true;
+  if (currentController) currentController.abort();
+  currentController = new AbortController();
+  const { signal } = currentController;
+
+  refreshBtn.disabled = true;
 
   SOURCES.forEach(s => {
-    const loader = document.getElementById(`loader-${s.id}`);
-    loader.style.display = 'flex';
-    loader.innerHTML = '<div class="spinner"></div>';
-    const chgEl = document.getElementById(`change-${s.id}`);
-    chgEl.innerHTML   = '<span class="spinning">◌</span>';
-    chgEl.className   = 'change neutral';
+    ui[s.id].loader.style.display = 'flex';
+    ui[s.id].loader.innerHTML = '<div class="spinner"></div>';
+    ui[s.id].change.textContent = '◌';
+    ui[s.id].change.className = 'change neutral spinning';
   });
 
   await Promise.allSettled(SOURCES.map(async s => {
     try {
-      const d = await fetchQuote(s.symbol);
+      const d = await fetchQuote(s.symbol, signal);
       cache[s.id] = d;
-      renderCard(s.id, d, s.maxBar);
-    } catch(e) {
-      showError(s.id, 'Unavailable');
+      renderCard(s.id, d);
+    } catch (e) {
+      if (e.name !== 'AbortError') showError(s.id, 'Unavailable');
     }
   }));
 
@@ -556,9 +636,10 @@ async function loadAll() {
     renderGlobal(cache.vix.price, cache.move.price, cache.vstoxx.price);
   }
 
-  document.getElementById('updated').textContent =
-    'Fetched ' + new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-  btn.disabled = false;
+  if (!signal.aborted) {
+    updatedEl.textContent = 'Fetched ' + new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  }
+  refreshBtn.disabled = false;
 }
 
 loadAll();
