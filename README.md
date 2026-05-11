@@ -32,7 +32,9 @@ The **composite score** normalises MOVE onto the VIX scale (÷5) before weightin
 global-stress-dashboard/
 ├── index.html        # Dashboard UI
 ├── api/
-│   └── quote.js      # Vercel serverless proxy → Yahoo Finance
+│   └── quote.js      # Vercel serverless proxy → Options AtlasFeed API
+├── vendor/
+│   └── activfinancial-1.11.2-py3-none-any.whl      # The Options AtlasFeed (previously Activ) wheel
 ├── vercel.json       # Vercel routing config
 ├── .gitignore
 └── README.md
