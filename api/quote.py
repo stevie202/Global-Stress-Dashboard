@@ -11,6 +11,7 @@ import re
 import sys
 import traceback
 from http.server import BaseHTTPRequestHandler
+from typing import Optional
 from urllib.parse import urlparse, parse_qs
 
 # Add project root to path so common.py is importable
@@ -28,7 +29,7 @@ SYMBOL_MAP = {
 }
 
 
-def _parse_float(value):
+def _parse_float(value: Optional[str]) -> Optional[float]:
     """Parse a float from an Activ field string, stripping trend indicators like '<-- >'."""
     if value is None or value == 'None':
         return None
@@ -36,7 +37,7 @@ def _parse_float(value):
     return float(m.group()) if m else None
 
 
-def _get_field(mapping, *names):
+def _get_field(mapping: dict[str, str], *names: str) -> Optional[str]:
     """Return the first non-empty, non-'None' match from a list of field names."""
     for name in names:
         val = mapping.get(name)
@@ -56,6 +57,8 @@ class handler(BaseHTTPRequestHandler):
         params = parse_qs(urlparse(self.path).query)
         symbol = params.get('symbol', [None])[0]
 
+        print(f'[quote] GET symbol={symbol}')
+
         if not symbol:
             return self._json(400, {'error': 'Missing required parameter: symbol'})
 
@@ -68,22 +71,25 @@ class handler(BaseHTTPRequestHandler):
             session = common.connect_session()
             msg = session.snapshot(activ_symbol)
 
-            f = {
+            fields = {
                 session.metadata.get_field_name(msg.data_source_id, fid): str(field)
                 for fid, field in msg.fields.items()
             }
 
             # Extract with fallbacks — handles different field names per asset class
-            price     = _parse_float(_get_field(f, 'Trade', 'Close', 'Last'))
-            prev      = _parse_float(_get_field(f, 'PreviousClose', 'PrevClose'))
-            high      = _parse_float(_get_field(f, 'TradeHigh', 'High', 'DayHigh', 'SessionHigh', 'BestHigh', 'PreviousTradeHigh'))
-            low       = _parse_float(_get_field(f, 'TradeLow', 'Low', 'DayLow', 'SessionLow', 'BestLow', 'PreviousTradeLow'))
-            change    = _parse_float(_get_field(f, 'NetChange', 'Change'))
-            changePct = _parse_float(_get_field(f, 'PercentChange', 'PctChange'))
+            price     = _parse_float(_get_field(fields, 'Trade', 'Close', 'Last'))
+            prev      = _parse_float(_get_field(fields, 'PreviousClose', 'PrevClose'))
+            high      = _parse_float(_get_field(fields, 'TradeHigh', 'High', 'DayHigh', 'SessionHigh', 'BestHigh', 'PreviousTradeHigh'))
+            low       = _parse_float(_get_field(fields, 'TradeLow', 'Low', 'DayLow', 'SessionLow', 'BestLow', 'PreviousTradeLow'))
+            change    = _parse_float(_get_field(fields, 'NetChange', 'Change'))
+            changePct = _parse_float(_get_field(fields, 'PercentChange', 'PctChange'))
 
             if change is None and price is not None and prev is not None:
                 change    = price - prev
-                changePct = (change / prev) * 100 if prev else None
+                changePct = (change / prev) * 100 if prev != 0 else None
+
+            # Derive market state from whether a live trade is present
+            market_state = 'REGULAR' if _get_field(fields, 'Trade') else 'CLOSED'
 
             self._json(200, {
                 'symbol':      symbol,
@@ -93,8 +99,8 @@ class handler(BaseHTTPRequestHandler):
                 'changePct':   changePct,
                 'low':         low,
                 'high':        high,
-                'marketState': 'REGULAR',
-                'timestamp':   _get_field(f, 'TradeDate', 'Date'),
+                'marketState': market_state,
+                'timestamp':   _get_field(fields, 'TradeDate', 'Date'),
             })
 
         except Exception as e:

@@ -291,7 +291,7 @@
       <div class="global-score-label">COMPOSITE STRESS SCORE</div>
       <div class="global-badge neutral" id="global-badge">—</div>
     </div>
-    <div class="global-score neutral" id="global-score">--</div>
+    <div class="global-score neutral" id="global-score" aria-live="polite">--</div>
     <div class="global-desc" id="global-desc">Fetching live data…</div>
     <div class="global-meter-label">GLOBAL FEAR LEVEL</div>
     <div class="meter-track"><div class="meter-fill" id="global-meter"></div></div>
@@ -308,21 +308,21 @@
   <div class="weight-panel">
     <div class="weight-header">
       <span class="weight-title">COMPOSITE WEIGHTS</span>
-      <button class="weight-reset" onclick="resetWeights()">RESET</button>
+      <button class="weight-reset" id="weight-reset-btn">RESET</button>
     </div>
     <div class="weight-row">
       <span class="weight-label">VIX</span>
-      <input type="range" id="w-vix" min="0" max="100" value="50" class="weight-slider" oninput="updateWeights()">
+      <input type="range" id="w-vix" min="0" max="100" value="50" class="weight-slider">
       <span class="weight-pct" id="wp-vix">50%</span>
     </div>
     <div class="weight-row">
       <span class="weight-label">MOVE</span>
-      <input type="range" id="w-move" min="0" max="100" value="30" class="weight-slider" oninput="updateWeights()">
+      <input type="range" id="w-move" min="0" max="100" value="30" class="weight-slider">
       <span class="weight-pct" id="wp-move">30%</span>
     </div>
     <div class="weight-row">
       <span class="weight-label">VSTOXX</span>
-      <input type="range" id="w-vstoxx" min="0" max="100" value="20" class="weight-slider" oninput="updateWeights()">
+      <input type="range" id="w-vstoxx" min="0" max="100" value="20" class="weight-slider">
       <span class="weight-pct" id="wp-vstoxx">20%</span>
     </div>
   </div>
@@ -354,7 +354,7 @@
       </div>
       <div class="badge neutral" id="badge-vix">—</div>
     </div>
-    <div class="price neutral" id="price-vix">--</div>
+    <div class="price neutral" id="price-vix" aria-live="polite">--</div>
     <div class="change neutral" id="change-vix"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
     <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-vix"></div></div>
@@ -378,7 +378,7 @@
       </div>
       <div class="badge neutral" id="badge-move">—</div>
     </div>
-    <div class="price neutral" id="price-move">--</div>
+    <div class="price neutral" id="price-move" aria-live="polite">--</div>
     <div class="change neutral" id="change-move"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
     <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-move"></div></div>
@@ -402,7 +402,7 @@
       </div>
       <div class="badge neutral" id="badge-vstoxx">—</div>
     </div>
-    <div class="price neutral" id="price-vstoxx">--</div>
+    <div class="price neutral" id="price-vstoxx" aria-live="polite">--</div>
     <div class="change neutral" id="change-vstoxx"><span class="spinning">◌</span></div>
     <div class="meter-label">FEAR LEVEL</div>
     <div class="meter-track meter-track-sm"><div class="meter-fill" id="meter-vstoxx"></div></div>
@@ -421,7 +421,7 @@
 <!-- FOOTER -->
 <div class="footer-row">
   <div class="live"><div class="dot"></div>Powered by <a href="https://olympus.options-it.com/atlasvision-public/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;margin:0 4px;">Options AtlasFeed</a>(Status: LIVE)</div>
-  <button class="refresh-btn" id="refreshBtn" onclick="loadAll()">↺ REFRESH</button>
+  <button class="refresh-btn" id="refreshBtn">↺ REFRESH</button>
 </div>
 <div class="updated" id="updated"></div>
 
@@ -471,7 +471,12 @@ const globalEls = {
 const refreshBtn = document.getElementById('refreshBtn');
 const updatedEl  = document.getElementById('updated');
 
-// ── THRESHOLDS ─────────────────────────────────────────────────────────────
+// ── EVENT LISTENERS ───────────────────────────────────────────────────────
+document.getElementById('weight-reset-btn').addEventListener('click', resetWeights);
+refreshBtn.addEventListener('click', loadAll);
+Object.values(weightEls).forEach(el => el.addEventListener('input', updateWeights));
+
+// ── THRESHOLDS & LEVELS ────────────────────────────────────────────────────
 function levelFromScore(v) {
   if      (v < 15) return { name:'CALM',     color:'var(--c-green)' };
   else if (v < 20) return { name:'NEUTRAL',  color:'var(--text-silver)' };
@@ -480,7 +485,36 @@ function levelFromScore(v) {
   else             return { name:'REACT',    color:'var(--c-red)' };
 }
 
-// ── WEIGHTS ─────────────────────────────────────────────────────────────────
+const DESCS = {
+  CALM:     'Markets are tranquil. Low volatility, high investor confidence.',
+  NEUTRAL:  'Normal market conditions. Typical fluctuation, no elevated concern.',
+  CAUTIOUS: 'Elevated uncertainty. Investors are hedging — watch closely.',
+  CONCERN:  'Significant stress. Risk-off sentiment building across markets.',
+  REACT:    'Extreme fear. Markets in crisis mode — review and take action.',
+};
+
+const THRESHOLDS = [
+  { limit: 0,  pct: 0   },
+  { limit: 15, pct: 25  },
+  { limit: 20, pct: 50  },
+  { limit: 25, pct: 75  },
+  { limit: 35, pct: 100 },
+];
+
+function scoreToBarPct(s) {
+  if (s <= 0) return 0;
+  for (let i = 1; i < THRESHOLDS.length; i++) {
+    const prev = THRESHOLDS[i - 1];
+    const curr = THRESHOLDS[i];
+    if (s <= curr.limit) {
+      const ratio = (s - prev.limit) / (curr.limit - prev.limit);
+      return prev.pct + ratio * (curr.pct - prev.pct);
+    }
+  }
+  return 100;
+}
+
+// ── WEIGHTS ────────────────────────────────────────────────────────────────
 function getWeights() {
   const vix    = parseInt(weightEls.vix.value, 10);
   const move   = parseInt(weightEls.move.value, 10);
@@ -508,19 +542,10 @@ function resetWeights() {
 
 function normaliseMove(m) { return m / 5; }
 
-function scoreToBarPct(s) {
-  if      (s <= 0)  return 0;
-  else if (s <= 15) return (s / 15) * 25;
-  else if (s <= 20) return 25 + ((s - 15) / 5)  * 25;
-  else if (s <= 25) return 50 + ((s - 20) / 5)  * 25;
-  else if (s <= 35) return 75 + ((s - 25) / 10) * 25;
-  else              return 100;
-}
+// ── FORMATTER ─────────────────────────────────────────────────────────────
+function fmt(n, dp = 2) { return Number.isFinite(n) ? n.toFixed(dp) : '—'; }
 
-function f2(n) { return Number.isFinite(n) ? n.toFixed(2) : '—'; }
-function f1(n) { return Number.isFinite(n) ? n.toFixed(1) : '—'; }
-
-// ── CARD RENDERER ──────────────────────────────────────────────────────────
+// ── CARD RENDERER ─────────────────────────────────────────────────────────
 function renderCard(id, data) {
   const els = ui[id];
 
@@ -537,7 +562,7 @@ function renderCard(id, data) {
   const priceClass = isUp === true ? 'up' : isUp === false ? 'down' : 'neutral';
   const dp = id === 'move' ? 1 : 2;
 
-  els.price.textContent = dp === 1 ? f1(price) : f2(price);
+  els.price.textContent = fmt(price, dp);
   els.price.className   = `price ${priceClass}`;
 
   els.change.className = `change ${priceClass}`;
@@ -577,16 +602,7 @@ function renderGlobal(vix, move, vstoxx) {
   globalEls.badge.textContent       = lvl.name;
   globalEls.badge.style.color       = lvl.color;
   globalEls.badge.style.borderColor = lvl.color;
-
-  const DESCS = {
-    CALM:     'Markets are tranquil. Low volatility, high investor confidence.',
-    NEUTRAL:  'Normal market conditions. Typical fluctuation, no elevated concern.',
-    CAUTIOUS: 'Elevated uncertainty. Investors are hedging — watch closely.',
-    CONCERN:  'Significant stress. Risk-off sentiment building across markets.',
-    REACT:    'Extreme fear. Markets in crisis mode — review and take action.',
-  };
-  globalEls.desc.textContent = DESCS[lvl.name];
-
+  globalEls.desc.textContent        = DESCS[lvl.name];
   globalEls.meter.style.width      = scoreToBarPct(composite) + '%';
   globalEls.meter.style.background = lvl.color;
 }
@@ -615,12 +631,25 @@ async function loadAll() {
 
   refreshBtn.disabled = true;
 
+  // Reset individual cards
   SOURCES.forEach(s => {
     ui[s.id].loader.style.display = 'flex';
-    ui[s.id].loader.innerHTML = '<div class="spinner"></div>';
+    ui[s.id].loader.replaceChildren(
+      Object.assign(document.createElement('div'), { className: 'spinner' })
+    );
     ui[s.id].change.textContent = '◌';
     ui[s.id].change.className = 'change neutral spinning';
   });
+
+  // Reset global composite
+  globalEls.score.textContent = '--';
+  globalEls.score.style.color = '';
+  globalEls.badge.textContent = '—';
+  globalEls.badge.className = 'global-badge neutral';
+  globalEls.badge.style.color = '';
+  globalEls.badge.style.borderColor = '';
+  globalEls.desc.textContent = 'Fetching live data…';
+  globalEls.meter.style.width = '0%';
 
   await Promise.allSettled(SOURCES.map(async s => {
     try {
