@@ -17,6 +17,9 @@ def connect_session(handler=None, parameters={}):
 	parameters[FID_ENABLE_DICTIONARY_DOWNLOAD] = True
 	parameters[FID_ENABLE_CTRL_HANDLER] = True
 
+	# Use the delayed ACTIV data source.
+	parameters[FID_DATA_SOURCE] = DATA_SOURCE_ACTIV_DELAYED
+
 	if not enable_legacy:
 		session = Session(parameters, handler) 
 	else:

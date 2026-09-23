@@ -7,16 +7,8 @@ from activfinancial.constants import *
 
 import common
 
-# Create the session.
-session = Session()
-
-#connect_parameters = {}
-#connect_parameters[FID_HOST]     = 'aop-replay.activfinancial.com'
-#connect_parameters[FID_USER_ID]  = 'user id'
-#connect_parameters[FID_PASSWORD] = 'password'
-
-# Connect synchronously.
-session.connect(connect_parameters)
+# Create and connect the session (credentials and data source are set in common.py).
+session = common.connect_session()
 
 # Snapshot the VIX topic.
 # Returns a SnapshotMessage
